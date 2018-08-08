@@ -9,21 +9,35 @@
 */
 
 #include "CTAGSampler.h"
-
+#define NUM_VOICES 2
 CTAGSampler::CTAGSampler()
 {
-	setKick("Kick.wav");
+	
 }
 
-void CTAGSampler::setKick(String audioFile)
+void CTAGSampler::setup()
+{
+	
+	for (int i = 0; i < NUM_VOICES; i++)
+	{
+		addVoice(new CTAGSamplerVoice());
+	}
+
+	formatManager.registerBasicFormats();
+
+	setInstrument("Kick.wav", 60, KICK);
+	setInstrument("Snare.wav", 61, SNARE);
+}
+
+void CTAGSampler::setInstrument(String audioFile, int midiNote, int instrument)
 {
 	// Is there an old Sound to be recycled?
-	if (auto* oldSound = static_cast<CTAGSamplerSound*>(getSound(KICK)))
+	if (auto* oldSound = static_cast<CTAGSamplerSound*>(getSound(instrument)))
 	{
-		recycleSound(audioFile, oldSound, 60);
+		recycleSound(audioFile, oldSound, midiNote);
 		return;
 	}
-	CTAGSamplerSound* newSound = prepareSound(audioFile, 60);
+	CTAGSamplerSound* newSound = prepareSound(audioFile, midiNote);
 	addSound(newSound);
 }
 
@@ -46,7 +60,7 @@ void CTAGSampler::recycleSound(String audioFile, CTAGSamplerSound* oldSound, int
 
 CTAGSamplerSound* CTAGSampler::prepareSound(String audioFile, int midiNote)
 {
-	File* file = new File(audioFile);
+	File* file = new File(File::getCurrentWorkingDirectory().getChildFile(audioFile));
 
 	ScopedPointer<AudioFormatReader> fileReader = formatManager.createReaderFor(*file);
 

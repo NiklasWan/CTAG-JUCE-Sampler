@@ -24,6 +24,7 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
                        )
 #endif
 {
+	sampler.setup();
 }
 
 JucesamplerAudioProcessor::~JucesamplerAudioProcessor()

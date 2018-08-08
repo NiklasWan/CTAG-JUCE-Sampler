@@ -20,7 +20,8 @@ class CTAGSampler : public Synthesiser
 
 public:
 	CTAGSampler();
-	void setKick(String audioFile);
+	void setup();
+	void setInstrument(String audioFile, int midNote, int instrument);
 	void CTAGSampler::recycleSound(String audioFile, CTAGSamplerSound* oldSound, int midiNote);
 	CTAGSamplerSound* CTAGSampler::prepareSound(String audioFile, int midiNote);
 	CTAGSamplerSound* getCTAGSamplerSound(int index) const;

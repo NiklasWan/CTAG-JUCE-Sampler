@@ -329,7 +329,7 @@
  #define JucePlugin_ManufacturerCode       0x4d616e75 // 'Manu'
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             0x56796e32 // 'Vyn2'
+ #define JucePlugin_PluginCode             0x42696d36 // 'Bim6'
 #endif
 #ifndef  JucePlugin_IsSynth
  #define JucePlugin_IsSynth                1
