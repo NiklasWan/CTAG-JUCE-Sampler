@@ -101,14 +101,22 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			float r = (inR != nullptr) ? (inR[pos] * invAlpha + inR[pos + 1] * alpha)
 				: l;
 
-			
+			//Envelope
 			envVal = env.doEnvelope();
 			l *= envVal;
 			r *= envVal;
 
+			//WaveShaper
+			shaper.setPositiveAmplification(4.0f);
+			shaper.setNegativeAmplification(0.2f);
+			l = shaper.processSample(l);
+			r = shaper.processSample(r);
+
+			//Filter
 			filter.update();
 			l = filter.doFilter(l);
 			r = filter.doFilter(r);
+
 
 			if (outR != nullptr)
 			{
@@ -128,7 +136,8 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 				break;
 			}
 		}
-	
+
+		
 		/*
 		totalSamples -= numSamples;
 		auto* leftData = outputBuffer.getWritePointer(0, startSample);

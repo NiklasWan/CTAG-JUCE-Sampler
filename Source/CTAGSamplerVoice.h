@@ -13,6 +13,7 @@
 #include "CTAGSamplerSound.h"
 #include "EnvelopeGenerator.h"
 #include "OnePoleFilter.h"
+#include "WaveShaper.h"
 
 class CTAGSamplerVoice : public SamplerVoice
 {
@@ -21,6 +22,7 @@ private:
 	BigInteger midiNote;
 	CEnvelopeGenerator env;
 	CVAOnePoleFilter filter;
+	WaveShaper shaper;
 public:
 	CEnvelopeGenerator & getEnvelope() { return env; }
 	CVAOnePoleFilter& getFilter() { return filter; }
