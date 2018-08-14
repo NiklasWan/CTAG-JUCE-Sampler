@@ -21,6 +21,11 @@
               file="Source/EnvelopeGenerator.cpp"/>
         <FILE id="LXC5pI" name="EnvelopeGenerator.h" compile="0" resource="0"
               file="Source/EnvelopeGenerator.h"/>
+        <FILE id="e1BH2x" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
+        <FILE id="kAhcWR" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
+        <FILE id="J3Zmgx" name="OnePoleFilter.cpp" compile="1" resource="0"
+              file="Source/OnePoleFilter.cpp"/>
+        <FILE id="kYwbvg" name="OnePoleFilter.h" compile="0" resource="0" file="Source/OnePoleFilter.h"/>
       </GROUP>
       <FILE id="OQ8t2G" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
@@ -53,6 +58,7 @@
         <MODULEPATH id="juce_audio_processors" path="../../../../Production/JUCE/modules"/>
         <MODULEPATH id="juce_audio_plugin_client" path="../../../../Production/JUCE/modules"/>
         <MODULEPATH id="juce_audio_utils" path="../../../../Production/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../../../Production/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>
@@ -67,6 +73,7 @@
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>

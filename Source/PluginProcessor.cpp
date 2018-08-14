@@ -99,7 +99,16 @@ void JucesamplerAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 	sampler.setCurrentPlaybackSampleRate(sampleRate);
-	
+
+	for(int i = 0; i < sampler.getNumVoices(); i++)
+	{
+		if(auto* voice = static_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
+		{
+			voice->getEnvelope().setSampleRate(sampleRate);
+			voice->getFilter().setSampleRate(sampleRate);
+			voice->getFilter().m_dFcControl = 1000.0f;
+		}
+	}
 }
 
 void JucesamplerAudioProcessor::releaseResources()

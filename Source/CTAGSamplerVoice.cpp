@@ -80,7 +80,7 @@ void CTAGSamplerVoice::stopNote(float velocity, bool allowTailOff)
 void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int startSample, int numSamples)
 {
 	//SamplerVoice::renderNextBlock(outputBuffer, startSample, numSamples);
-
+	
 	if (auto* playingSound = static_cast<CTAGSamplerSound*> (getCurrentlyPlayingSound().get()))
 	{
 		auto& data = *playingSound->data;
@@ -105,6 +105,10 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			envVal = env.doEnvelope();
 			l *= envVal;
 			r *= envVal;
+
+			filter.update();
+			l = filter.doFilter(l);
+			r = filter.doFilter(r);
 
 			if (outR != nullptr)
 			{
