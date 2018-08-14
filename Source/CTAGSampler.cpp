@@ -9,24 +9,64 @@
 */
 
 #include "CTAGSampler.h"
-#define NUM_VOICES 2
-CTAGSampler::CTAGSampler()
-{
-	
-}
+#include <string>
+#define NUM_VOICES 9
 
 void CTAGSampler::setup()
 {
 	
 	for (int i = 0; i < NUM_VOICES; i++)
 	{
-		addVoice(new CTAGSamplerVoice());
-	}
+		auto* voice = new CTAGSamplerVoice();
 
+		switch(i)
+		{
+		case KICK:
+			voice->setMidiNote(36);
+			break;
+		case SNARE:
+			voice->setMidiNote(38);
+			break;
+		case CLAP:
+			voice->setMidiNote(39);
+			break;
+		case TOM:
+			voice->setMidiNote(41);
+			break;
+		case CLHAT:
+			voice->setMidiNote(42);
+			break;
+		case PERC:
+			voice->setMidiNote(43);
+			break;
+		case OPHAT:
+			voice->setMidiNote(46);
+			break;
+		case CRASH:
+			voice->setMidiNote(49);
+			break;
+		case RIDE:
+			voice->setMidiNote(51);
+			break;
+		default:
+			break;
+		}
+		
+		addVoice(voice);
+	}
+	
 	formatManager.registerBasicFormats();
 
-	setInstrument("Kick.wav", 60, KICK);
-	setInstrument("Snare.wav", 61, SNARE);
+	setInstrument("Kick.wav", 36, KICK);
+	setInstrument("Snare.wav", 38, SNARE);
+	setInstrument("Clap.wav", 39, CLAP);
+	setInstrument("Tom.wav", 41, TOM);
+	setInstrument("ClHat.wav", 42, CLHAT);
+	setInstrument("Perc.wav", 43, PERC);
+	setInstrument("OpHat.wav", 46, OPHAT);
+	setInstrument("Crash.wav", 49, CRASH);
+	setInstrument("Ride.wav", 51, RIDE);
+	
 }
 
 void CTAGSampler::setInstrument(String audioFile, int midiNote, int instrument)
@@ -70,12 +110,40 @@ CTAGSamplerSound* CTAGSampler::prepareSound(String audioFile, int midiNote)
 	return new CTAGSamplerSound(audioFile, *fileReader, note, midiNote, 0.0f, 10.0f, 10.0f);
 }
 
-CTAGSamplerSound* CTAGSampler::getCTAGSamplerSound(int index) const
-{
-	return static_cast<CTAGSamplerSound*>(getSound(index));
-}
 
-CTAGSamplerVoice* CTAGSampler::getCTAGSamplerVoice(int index) const
+void CTAGSampler::noteOn(int midiChannel,
+	int midiNoteNumber,
+	float velocity)
 {
-	return static_cast<CTAGSamplerVoice*>(getVoice(index));
+	const ScopedLock sl(lock);
+	
+	for(int j = 0; j < getNumSounds(); j++)
+	{
+		auto* sound = getSound(j);
+		if(sound->appliesToNote(midiNoteNumber) && sound->appliesToChannel(midiChannel))
+		{
+			for(int i = 0; i < getNumVoices(); i++)
+			{
+				if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(getVoice(i)))
+				{
+					if(voice->canPlayCTAGSound(midiNoteNumber) && voice->getCurrentlyPlayingSound())
+					{
+						stopVoice(voice, 0.0f, false);
+					}
+				}
+			}
+
+			for(int i = 0; i < getNumVoices(); i++)
+			{
+				if(auto* voice = dynamic_cast<CTAGSamplerVoice*> (getVoice(i)))
+				{
+					if(voice->canPlayCTAGSound(midiNoteNumber) && !voice->getCurrentlyPlayingSound())
+					{
+						Logger::outputDebugString("Start Voice: " + std::to_string(i) + " with Sound: " + std::to_string(j));
+						startVoice(voice, sound, midiChannel, midiNoteNumber, velocity);
+					}
+				}
+			}
+		}
+	}
 }

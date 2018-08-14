@@ -99,6 +99,7 @@ void JucesamplerAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 	sampler.setCurrentPlaybackSampleRate(sampleRate);
+	
 }
 
 void JucesamplerAudioProcessor::releaseResources()

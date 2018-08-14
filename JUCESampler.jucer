@@ -17,6 +17,10 @@
               file="Source/CTAGSamplerVoice.cpp"/>
         <FILE id="QqABcv" name="CTAGSamplerVoice.h" compile="0" resource="0"
               file="Source/CTAGSamplerVoice.h"/>
+        <FILE id="i3PrTW" name="EnvelopeGenerator.cpp" compile="1" resource="0"
+              file="Source/EnvelopeGenerator.cpp"/>
+        <FILE id="LXC5pI" name="EnvelopeGenerator.h" compile="0" resource="0"
+              file="Source/EnvelopeGenerator.h"/>
       </GROUP>
       <FILE id="OQ8t2G" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

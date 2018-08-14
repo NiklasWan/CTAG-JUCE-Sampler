@@ -19,12 +19,14 @@ class CTAGSampler : public Synthesiser
 	AudioFormatManager formatManager;
 
 public:
-	CTAGSampler();
 	void setup();
 	void setInstrument(String audioFile, int midNote, int instrument);
 	void CTAGSampler::recycleSound(String audioFile, CTAGSamplerSound* oldSound, int midiNote);
 	CTAGSamplerSound* CTAGSampler::prepareSound(String audioFile, int midiNote);
-	CTAGSamplerSound* getCTAGSamplerSound(int index) const;
-	CTAGSamplerVoice* getCTAGSamplerVoice(int index) const;
-	typedef enum Sounds { KICK = 0, SNARE, CLAP }Sounds_t;
+
+	typedef enum Sounds { KICK = 0, SNARE, CLAP, TOM, CLHAT, PERC, OPHAT, CRASH, RIDE }Sounds_t;
+
+	void noteOn(int midiChannel,
+		int midiNoteNumber,
+		float velocity) override;
 };
