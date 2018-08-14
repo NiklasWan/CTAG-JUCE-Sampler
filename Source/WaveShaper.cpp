@@ -12,7 +12,7 @@
 WaveShaper::WaveShaper()
 {
 	ampFactorPositive = ampFactorNegative = 0.2f;
-	isActive = true;
+	activity = true;
 }
 
 void WaveShaper::setPositiveAmplification(double amp)

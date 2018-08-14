@@ -61,10 +61,13 @@ protected:
 
 	// --- our cutoff frequency modulation input
 	double m_dFcMod;
-
+	bool activity;
 	// --- add more mods here
 
 public:
+
+	bool isActive() { return activity; }
+	void setActive(bool val) { activity = val; }
 	// --- FUNCTIONS: all public
 	//	
 	inline void setFcMod(double d) { m_dFcMod = d; }

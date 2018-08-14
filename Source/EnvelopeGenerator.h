@@ -57,6 +57,11 @@ protected:
 	enum { off, attack, decay, sustain, release, shutdown };
 
 public:
+
+	double getAttackTime() { return m_dAttackTime_mSec; }
+	double getDecayTime() { return m_dDecayTime_mSec; }
+	double getSustainValue() { return m_dSustainLevel; }
+	double getReleaseTime() { return m_dReleaseTime_mSec; }
 	// --- accessors - allow owner to get our state
 	inline int getState() { return m_uState; }
 

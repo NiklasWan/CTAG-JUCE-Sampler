@@ -43,6 +43,8 @@ void CVAOnePoleFilter::update()
 // do the filter
 double CVAOnePoleFilter::doFilter(double xn)
 {
+	if (!isActive()) return xn;
+
 	// return xn if filter not supported
 	if (m_uFilterType != LPF1 && m_uFilterType != HPF1)
 		return xn;

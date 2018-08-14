@@ -15,16 +15,18 @@ class WaveShaper
 {
 private:
 	double ampFactorPositive, ampFactorNegative;
-	bool isActive;
+	bool activity;
 public:
 	WaveShaper();
 	void setPositiveAmplification(double amp);
 	void setNegativeAmplification(double amp);
-	void setActive(bool active) { isActive = active; }
+	double getSymmetrical() { return ampFactorNegative; }
+	bool isActive() { return activity; }
+	void setActive(bool active) { activity = active; }
 	void setAmplificationSymmetrical(double amp);
 	inline double processSample(double xn)
 	{
-		if (!isActive) return xn;
+		if (!isActive()) return xn;
 		double yn = 0.0f;
 		if (xn >= 0)
 			yn = std::tanh(xn * ampFactorPositive) / std::tanh(ampFactorNegative);

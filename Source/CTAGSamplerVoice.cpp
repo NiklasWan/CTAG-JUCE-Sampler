@@ -107,8 +107,7 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			r *= envVal;
 
 			//WaveShaper
-			shaper.setPositiveAmplification(4.0f);
-			shaper.setNegativeAmplification(0.2f);
+			
 			l = shaper.processSample(l);
 			r = shaper.processSample(r);
 

@@ -34,5 +34,35 @@ public:
 	void renderNextBlock(AudioBuffer< float > &outputBuffer, int startSample, int numSamples) override;
 	void setMidiNote(int note);
 	bool canPlayCTAGSound(int note) const;
+
+	//Getter/Setter Pitch
+	void setPitchVal(int pitch) { pitchVal = pitch; }
+	int getPitchVal() { return pitchVal; }
+	
+
+	//Getter/Setter Envelope
+	double getEnvelopeAttack() { return env.getAttackTime(); }
+	double getEnvelopeDecay() { return env.getDecayTime(); }
+	double getEnvelopeSustain() { return env.getSustainValue(); }
+	double getEnvelopeRelease() { return env.getReleaseTime(); }
+
+	void setEnvelopeAttack(double time) { env.setAttackTime_mSec(time); }
+	void setEnvelopeDecay(double time) { env.setDecayTime_mSec(time); }
+	void setEnvelopeSustain(double sus) { env.setSustainLevel(sus); }
+	void setEnvelopeRelease(double time) { env.setReleaseTime_mSec(time); }
+
+	//Geter/Setter Filter
+	bool isFilterActive() { return filter.isActive(); }
+	void setFilterActive(bool val) { filter.setActive(val); }
+
+	double getCutoffFreq() { return filter.m_dFcControl; }
+	double setCutoffFreq(double fc) { filter.m_dFcControl = fc; }
+
+	//Getter/Setter Waveshaper
+	bool isWaveShaperActive() { return shaper.isActive(); }
+	void setWaveShaperActive(bool val) { shaper.setActive(val); }
+
+	double getWaveShaperSymmetrical() { return shaper.getSymmetrical(); }
+	double setWaveShaperSymmetrical(double amp) { shaper.setAmplificationSymmetrical(amp); }
 };
 
