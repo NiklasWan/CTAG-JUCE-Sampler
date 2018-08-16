@@ -9,7 +9,7 @@
 */
 
 #include "CTAGSampler.h"
-#include <string>
+
 #define NUM_VOICES 9
 
 void CTAGSampler::setup()
@@ -17,7 +17,7 @@ void CTAGSampler::setup()
 	
 	for (int i = 0; i < NUM_VOICES; i++)
 	{
-		auto* voice = new CTAGSamplerVoice();
+		auto* voice = new CTAGSamplerVoice(i);
 
 		switch(i)
 		{
@@ -72,7 +72,7 @@ void CTAGSampler::setup()
 void CTAGSampler::setInstrument(String audioFile, int midiNote, int instrument)
 {
 	// Is there an old Sound to be recycled?
-	if (auto* oldSound = static_cast<CTAGSamplerSound*>(getSound(instrument)))
+	if (auto* oldSound = dynamic_cast<CTAGSamplerSound*>(getSound(instrument)))
 	{
 		recycleSound(audioFile, oldSound, midiNote);
 		return;
@@ -85,12 +85,12 @@ void CTAGSampler::setInstrument(String audioFile, int midiNote, int instrument)
 
 void CTAGSampler::recycleSound(String audioFile, CTAGSamplerSound* oldSound, int midiNote)
 {
-	CTAGSamplerSound::Parameter_t* params = oldSound->getParameters();
+	
 
 
 	CTAGSamplerSound* newSound = prepareSound(audioFile, midiNote);
 
-	newSound->setParameters(params);
+	
 	removeSound(KICK);
 
 	addSound(newSound);
@@ -139,7 +139,7 @@ void CTAGSampler::noteOn(int midiChannel,
 				{
 					if(voice->canPlayCTAGSound(midiNoteNumber) && !voice->getCurrentlyPlayingSound())
 					{
-						Logger::outputDebugString("Start Voice: " + std::to_string(i) + " with Sound: " + std::to_string(j));
+						//Logger::outputDebugString("Start Voice: " + std::to_string(i) + " with Sound: " + std::to_string(j));
 						startVoice(voice, sound, midiChannel, midiNoteNumber, velocity);
 					}
 				}

@@ -3,11 +3,12 @@
 
 #define EG_DEFAULT_STATE_TIME 1000 // 1000 mSec
 
+
 class CEnvelopeGenerator
 {
 public:
 	CEnvelopeGenerator(void);
-	~CEnvelopeGenerator(void);
+	
 
 	// --- analog and digital mode
 	int m_uEGMode;
@@ -252,4 +253,6 @@ public:
 		return m_dEnvelopeOutput;
 	}
 
+
+	
 };

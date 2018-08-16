@@ -21,8 +21,8 @@ class CTAGSampler : public Synthesiser
 public:
 	void setup();
 	void setInstrument(String audioFile, int midNote, int instrument);
-	void CTAGSampler::recycleSound(String audioFile, CTAGSamplerSound* oldSound, int midiNote);
-	CTAGSamplerSound* CTAGSampler::prepareSound(String audioFile, int midiNote);
+	void recycleSound(String audioFile, CTAGSamplerSound* oldSound, int midiNote);
+	CTAGSamplerSound* prepareSound(String audioFile, int midiNote);
 
 	typedef enum Sounds { KICK = 0, SNARE, CLAP, TOM, CLHAT, PERC, OPHAT, CRASH, RIDE }Sounds_t;
 

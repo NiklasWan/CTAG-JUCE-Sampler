@@ -7,7 +7,7 @@ class CVAOnePoleFilter : public CFilter
 {
 public:
 	CVAOnePoleFilter(void);
-	~CVAOnePoleFilter(void);
+	
 
 	// Trapezoidal Integrator Components
 	double m_dAlpha;			// Feed Forward coeff

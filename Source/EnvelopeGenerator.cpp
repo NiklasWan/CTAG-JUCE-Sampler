@@ -5,7 +5,7 @@ CEnvelopeGenerator::CEnvelopeGenerator(void)
 {
 	// defaults
 	m_dSampleRate = 48000;
-	m_dAttackTime_mSec = 500;
+	m_dAttackTime_mSec = 0;
 	m_dDecayTime_mSec = 0;
 	m_dReleaseTime_mSec = 1000;
 	m_dSustainLevel = 1.0;
@@ -24,9 +24,6 @@ CEnvelopeGenerator::CEnvelopeGenerator(void)
 	m_bLegatoMode = false;
 }
 
-CEnvelopeGenerator::~CEnvelopeGenerator(void)
-{
-}
 
 void CEnvelopeGenerator::setEGMode(int u)
 {

@@ -30,12 +30,14 @@
         <FILE id="ku7fHe" name="WaveShaper.h" compile="0" resource="0" file="Source/WaveShaper.h"/>
       </GROUP>
       <GROUP id="{A57BFC9D-4241-AB38-71C6-78DE9AFB4083}" name="Gui">
-        <FILE id="xu7aj1" name="InstrumentView.cpp" compile="1" resource="0"
-              file="Source/InstrumentView.cpp"/>
-        <FILE id="DAzfdA" name="InstrumentView.h" compile="0" resource="0"
-              file="Source/InstrumentView.h"/>
-        <FILE id="MwKjs2" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>
-        <FILE id="i920eY" name="MainWindow.h" compile="0" resource="0" file="Source/MainWindow.h"/>
+        <FILE id="uk3jg6" name="CTAGInstrumentComponent.cpp" compile="1" resource="0"
+              file="Source/CTAGInstrumentComponent.cpp"/>
+        <FILE id="BflLFN" name="CTAGInstrumentComponent.h" compile="0" resource="0"
+              file="Source/CTAGInstrumentComponent.h"/>
+        <FILE id="SDvCLW" name="CTAGTabComponent.cpp" compile="1" resource="0"
+              file="Source/CTAGTabComponent.cpp"/>
+        <FILE id="Uk6yhp" name="CTAGTabComponent.h" compile="0" resource="0"
+              file="Source/CTAGTabComponent.h"/>
       </GROUP>
       <FILE id="OQ8t2G" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

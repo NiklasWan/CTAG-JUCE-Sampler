@@ -9,7 +9,7 @@
 */
 
 #include "CTAGSamplerVoice.h"
-#include <string>
+
 
 bool CTAGSamplerVoice::canPlaySound(SynthesiserSound* sampSound)
 {
@@ -21,7 +21,7 @@ void CTAGSamplerVoice::startNote(int midiNoteNumber, float velocity, Synthesiser
 {
 	
 
-	if (auto* sound = static_cast<CTAGSamplerSound*> (sampSound))
+	if (auto* sound = dynamic_cast<CTAGSamplerSound*> (sampSound))
 	{
 		
 			pitchRatio = std::pow(2.0, ((midiNoteNumber - sound->midiRootNote) + pitchVal) / 12.0)
@@ -31,7 +31,6 @@ void CTAGSamplerVoice::startNote(int midiNoteNumber, float velocity, Synthesiser
 			lgain = velocity;
 			rgain = velocity;
 
-			//env.reset();
 			env.startEG();
 		
 		
@@ -41,7 +40,7 @@ void CTAGSamplerVoice::startNote(int midiNoteNumber, float velocity, Synthesiser
 	{
 		jassertfalse; // this object can only play SamplerSounds!
 	}
-	//SamplerVoice::startNote(midiNoteNumber, velocity, sampSound, pitchWheel);
+	
 }
 
 void CTAGSamplerVoice::pitchWheelMoved(int newValue)
@@ -64,6 +63,7 @@ void CTAGSamplerVoice::stopNote(float velocity, bool allowTailOff)
 		{
 			env.shutDown();
 			clearCurrentNote();
+			
 		}
 
 		else if (!allowTailOff && velocity == 1.0f)
@@ -79,9 +79,9 @@ void CTAGSamplerVoice::stopNote(float velocity, bool allowTailOff)
 
 void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int startSample, int numSamples)
 {
-	//SamplerVoice::renderNextBlock(outputBuffer, startSample, numSamples);
 	
-	if (auto* playingSound = static_cast<CTAGSamplerSound*> (getCurrentlyPlayingSound().get()))
+	
+	if (auto* playingSound = dynamic_cast<CTAGSamplerSound*> (getCurrentlyPlayingSound().get()))
 	{
 		auto& data = *playingSound->data;
 		const float* const inL = data.getReadPointer(0);
@@ -106,8 +106,10 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			l *= envVal;
 			r *= envVal;
 
-			//WaveShaper
 			
+
+			//WaveShaper
+			setWaveShaperSymmetrical(shaperAmp.getNextValue());
 			l = shaper.processSample(l);
 			r = shaper.processSample(r);
 
@@ -128,43 +130,17 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			}
 
 			sourceSamplePosition += pitchRatio;
-
+			
+				
 			if (env.getState() == 0 || sourceSamplePosition > playingSound->length)
 			{
 				clearCurrentNote();
 				break;
 			}
+
+			
 		}
-
 		
-		/*
-		totalSamples -= numSamples;
-		auto* leftData = outputBuffer.getWritePointer(0, startSample);
-		auto* rightData = outputBuffer.getWritePointer(1, startSample);
-
-		
-
-		float envValue = 0.0f, currentLeft = 0.0f, currentRight = 0.0f;
-		
-		for (int sample = 0; sample < numSamples; sample++)
-		{
-			envValue = env.doEnvelope();
-
-			currentLeft = leftData[sample];
-			currentRight = rightData[sample];
-
-			currentLeft *= envValue;
-			currentRight *= envValue;
-
-			outputBuffer.setSample(0, sample + startSample, currentLeft);
-			outputBuffer.setSample(1, sample + startSample, currentRight);
-
-
-
-		}
-		if (env.getState() == 0 || totalSamples <= 0)
-			clearCurrentNote();
-		*/
 	}
 
 }
@@ -172,3 +148,49 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 void CTAGSamplerVoice::setMidiNote(int note) { midiNote.setBit(note); }
 
 bool CTAGSamplerVoice::canPlayCTAGSound(int note) const { return midiNote[note]; }
+
+
+void CTAGSamplerVoice::parameterChanged(const String &parameterID, float newValue) 
+{
+	if (parameterID == String("ampEnvAttack" + String(index)))
+	{
+		setEnvelopeAttack(newValue);
+
+	}
+	if (parameterID == String("ampEnvDecay" + String(index)))
+	{
+		setEnvelopeDecay(newValue);
+
+	}
+	if (parameterID == String("ampEnvSustain" + String(index)))
+	{
+		setEnvelopeSustain(newValue);
+
+	}
+	if (parameterID == String("ampEnvRelease" + String(index)))
+	{
+		setEnvelopeRelease(newValue);
+
+	}
+	if (parameterID == String("Filter ON/OFF" + String(index)))
+	{
+		setFilterActive(newValue);
+	}
+	if (parameterID == String("filterCutoff" + String(index)))
+	{
+		setCutoffFreq(newValue);
+	}
+	if (parameterID == String("Distortion ON/OFF" + String(index)))
+	{
+		setWaveShaperActive(newValue);
+	}
+	if (parameterID == String("distortionVal" + String(index)))
+	{
+		shaperAmp.setValue(newValue);
+		
+	}
+	if (parameterID == String("pitchVal" + String(index)))
+	{
+		pitchVal = newValue;
+	}
+}

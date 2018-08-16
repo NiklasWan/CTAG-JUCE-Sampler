@@ -12,7 +12,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-#include "MainWindow.h"
+#include "CTAGTabComponent.h"
+
 //==============================================================================
 /**
 */
@@ -30,6 +31,6 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     JucesamplerAudioProcessor& processor;
-	MainWindow mainWindow;
+	ScopedPointer<CTAGTabComponent> tabComponent;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JucesamplerAudioProcessorEditor)
 };

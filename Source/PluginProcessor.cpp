@@ -10,6 +10,14 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+static String doubleToString(double val) { return String(val); }
+static double stringToDouble(String s){return std::stod(s.toStdString());}
+
+static String boolToString(float val) { return (val == 1.0f) ? "active" : "inactive"; }
+static bool stringToBool(String s) { return (s == "active") ? true : false; }
+
+static String intToString(int val) { return String(val); }
+static int stringToInt(String s) { return std::stoi(s.toStdString()); }
 
 //==============================================================================
 JucesamplerAudioProcessor::JucesamplerAudioProcessor()
@@ -24,11 +32,54 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
                        )
 #endif
 {
+	undoManager = new UndoManager();
+	valueTree = new AudioProcessorValueTreeState(*this, undoManager);
+	
+	//Initialising Sampler
 	sampler.setup();
+	//Adding all Parameters to the Value Tree
+	for(int i = 0; i < sampler.getNumVoices(); i++)
+	{
+		valueTree->createAndAddParameter(String("ampEnvAttack" + String(i)), "ampEnvAttack", "", NormalisableRange<float>(0.0f, 500.0f), 0.0f, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(String("ampEnvDecay" + String(i)), "ampEnvDecay", "", NormalisableRange<float>(0.0f, 1000.0f), 0.0f, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(String("ampEnvSustain" + String(i)), "ampEnvSustain", "", NormalisableRange<float>(0.0f, 1.0f), 1, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(String("ampEnvRelease" + String(i)), "ampEnvRelease", "", NormalisableRange<float>(0.0f, 5000.0f), 1000.0f, doubleToString, stringToDouble);
+
+		valueTree->createAndAddParameter(String("Filter ON/OFF" + String(i)), "Filter ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
+		valueTree->createAndAddParameter(String("filterCutoff" + String(i)), "filterCutoff", "", NormalisableRange<float>(18.0f, 18000.0f, 0, 0.199f), 18000.0f, doubleToString, stringToDouble);
+
+		valueTree->createAndAddParameter(String("Distortion ON/OFF" + String(i)), "Distortion ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
+		valueTree->createAndAddParameter(String("distortionVal" + String(i)), "distortionVal", "", NormalisableRange<float>(0.2f, 5.0f), 0.2f, doubleToString, stringToDouble);
+
+		valueTree->createAndAddParameter(String("pitchVal" + String(i)), "pitchVal", "", NormalisableRange<float>(-12, 12, 1), 0, intToString, stringToInt);
+		if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
+		{
+			valueTree->addParameterListener(String("ampEnvAttack" + String(i)) , voice);
+			valueTree->addParameterListener(String("ampEnvDecay" + String(i)), voice);
+			valueTree->addParameterListener(String("ampEnvSustain" + String(i)), voice);
+			valueTree->addParameterListener(String("ampEnvRelease" + String(i)), voice);
+
+			valueTree->addParameterListener(String("Filter ON/OFF" + String(i)), voice);
+			valueTree->addParameterListener(String("filterCutoff" + String(i)), voice);
+
+			valueTree->addParameterListener(String("Distortion ON/OFF" + String(i)), voice);
+			valueTree->addParameterListener(String("distortionVal" + String(i)), voice);
+
+			valueTree->addParameterListener(String("pitchVal" + String(i)), voice);
+		}
+	}
+	valueTree->state = ValueTree("CTAGSamplerParameters");
+	
+	
+	
+
+
 }
 
 JucesamplerAudioProcessor::~JucesamplerAudioProcessor()
 {
+	undoManager = nullptr;
+	valueTree = nullptr;
 }
 
 //==============================================================================
@@ -102,11 +153,10 @@ void JucesamplerAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 
 	for(int i = 0; i < sampler.getNumVoices(); i++)
 	{
-		if(auto* voice = static_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
+		if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
 		{
 			voice->getEnvelope().setSampleRate(sampleRate);
 			voice->getFilter().setSampleRate(sampleRate);
-			voice->getFilter().m_dFcControl = 1000.0f;
 		}
 	}
 }
@@ -176,12 +226,23 @@ void JucesamplerAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+	MemoryOutputStream stream(destData, false);
+	valueTree->state.writeToStream(stream);
 }
 
 void JucesamplerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+	ValueTree tree = ValueTree::readFromData(data, sizeInBytes);
+
+	if(tree.isValid())
+	{
+		if(tree.hasType("CTAGSamplerParameters"))
+		{
+			valueTree->state = tree;
+		}
+	}
 }
 
 //==============================================================================

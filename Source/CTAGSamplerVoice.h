@@ -15,15 +15,23 @@
 #include "OnePoleFilter.h"
 #include "WaveShaper.h"
 
-class CTAGSamplerVoice : public SamplerVoice
+class CTAGSamplerVoice : public SamplerVoice,  public AudioProcessorValueTreeState::Listener
 {
 private:
-	int pitchVal = 0;
+	int pitchVal;
 	BigInteger midiNote;
 	CEnvelopeGenerator env;
 	CVAOnePoleFilter filter;
 	WaveShaper shaper;
+	int index;
+	LinearSmoothedValue<double> shaperAmp;
+	double currSampRate;
 public:
+	CTAGSamplerVoice(int i) : index(i), pitchVal(0), currSampRate(48000)
+	{ 
+		shaperAmp.reset(48000, 0.01);
+		shaperAmp.setValue(0.2);
+	}
 	CEnvelopeGenerator & getEnvelope() { return env; }
 	CVAOnePoleFilter& getFilter() { return filter; }
 	bool canPlaySound(SynthesiserSound* sampSound) override;
@@ -34,6 +42,17 @@ public:
 	void renderNextBlock(AudioBuffer< float > &outputBuffer, int startSample, int numSamples) override;
 	void setMidiNote(int note);
 	bool canPlayCTAGSound(int note) const;
+	void setCurrentPlaybackSampleRate(double newRate) override
+	{
+		SamplerVoice::setCurrentPlaybackSampleRate(newRate);
+		if(currSampRate != newRate && newRate != 0)
+		{
+			currSampRate = newRate;
+			shaperAmp.reset(currSampRate, 0.01);
+			env.setSampleRate(currSampRate);
+			filter.setSampleRate(currSampRate);
+		}
+	}
 
 	//Getter/Setter Pitch
 	void setPitchVal(int pitch) { pitchVal = pitch; }
@@ -56,13 +75,16 @@ public:
 	void setFilterActive(bool val) { filter.setActive(val); }
 
 	double getCutoffFreq() { return filter.m_dFcControl; }
-	double setCutoffFreq(double fc) { filter.m_dFcControl = fc; }
+	void setCutoffFreq(double fc) { filter.m_dFcControl = fc; }
 
 	//Getter/Setter Waveshaper
 	bool isWaveShaperActive() { return shaper.isActive(); }
 	void setWaveShaperActive(bool val) { shaper.setActive(val); }
 
 	double getWaveShaperSymmetrical() { return shaper.getSymmetrical(); }
-	double setWaveShaperSymmetrical(double amp) { shaper.setAmplificationSymmetrical(amp); }
+	void setWaveShaperSymmetrical(double amp) { shaper.setAmplificationSymmetrical(amp); }
+	
+	void parameterChanged(const String &parameterID, float newValue) override;
+
 };
 

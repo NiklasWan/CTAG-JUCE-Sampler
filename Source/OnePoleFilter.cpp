@@ -22,9 +22,7 @@ CVAOnePoleFilter::CVAOnePoleFilter(void)
 	reset();
 }
 
-CVAOnePoleFilter::~CVAOnePoleFilter(void)
-{
-}
+
 
 // recalc coeffs
 void CVAOnePoleFilter::update()
