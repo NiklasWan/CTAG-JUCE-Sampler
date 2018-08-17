@@ -3,6 +3,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "CTAGInstrumentComponent.h"
+#include "CTAGMainControls.h"
 
 class CTAGTabComponent : public Component
 {

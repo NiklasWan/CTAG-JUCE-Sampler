@@ -57,6 +57,7 @@ public:
 
 
 	AudioProcessorValueTreeState& getValueTree() { return *valueTree; }
+	CTAGSampler& getSampler() { return sampler; }
 private:
     //==============================================================================
 	CTAGSampler sampler;

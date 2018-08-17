@@ -14,7 +14,8 @@
 
 void CTAGSampler::setup()
 {
-	
+	samplesFolder = File::getSpecialLocation(File::userDesktopDirectory).getChildFile("Samples");
+	instruments = {"Kick", "Snare", "Clap", "Tom", "Perc", "OpHat", "ClHat", "Crash", "Ride"};
 	for (int i = 0; i < NUM_VOICES; i++)
 	{
 		auto* voice = new CTAGSamplerVoice(i);
@@ -56,7 +57,7 @@ void CTAGSampler::setup()
 	}
 	
 	formatManager.registerBasicFormats();
-
+	/*
 	setInstrument("Kick.wav", 36, KICK);
 	setInstrument("Snare.wav", 38, SNARE);
 	setInstrument("Clap.wav", 39, CLAP);
@@ -65,8 +66,8 @@ void CTAGSampler::setup()
 	setInstrument("Perc.wav", 43, PERC);
 	setInstrument("OpHat.wav", 46, OPHAT);
 	setInstrument("Crash.wav", 49, CRASH);
-	setInstrument("Ride.wav", 51, RIDE);
-	
+	setInstrument("Ride.wav", 51, RIDE);*/
+	loadSamples("Kit 1", "C");
 }
 
 void CTAGSampler::setInstrument(String audioFile, int midiNote, int instrument)
@@ -146,4 +147,87 @@ void CTAGSampler::noteOn(int midiChannel,
 			}
 		}
 	}
+}
+
+void CTAGSampler::loadSamples(String kit, String rootNote)
+{
+	String number = String( String(0) + String(0) + kit.trimCharactersAtStart("Kit "));
+	
+	const ScopedLock sl(lock);
+
+	if(getNumSounds() != 0)
+	{
+		for(int i = 0; i < getNumSounds(); i++)
+		{
+			removeSound(i);
+		}
+	}
+	
+
+	
+	for(int i = 0; i < instruments.size(); i++)
+	{
+		addCTAGSound(instruments[i], String(instruments[i] + "_" + number + "_" + rootNote + ".wav"), kit);
+		
+	}
+	
+	
+	
+}
+
+
+void CTAGSampler::addCTAGSound(String instrument, String fileName, String kit)
+{
+	int midiNote;
+	if(instrument == String("Kick"))
+	{
+		midiNote = 36;
+	}
+	else if( instrument == String("Snare"))
+	{
+		midiNote = 38;
+	}
+	else if(instrument == String ("Clap"))
+	{
+		midiNote = 39;
+	}
+	else if (instrument == String("Tom"))
+	{
+		midiNote = 41;
+	}
+	else if( instrument == String("ClHat"))
+	{
+		midiNote = 42;
+	}
+	else if (instrument == String("Perc"))
+	{
+		midiNote = 43;
+	}
+	else if(instrument == String("OpHat"))
+	{
+		midiNote = 46;
+	}
+	else if (instrument == String("Crash"))
+	{
+		midiNote = 49;
+	}
+	else if (instrument == String("Ride"))
+	{
+		midiNote = 51;
+	}
+
+	File* file = new File(samplesFolder.getChildFile(instrument).getChildFile(kit).getChildFile(fileName));
+	
+	//Logger::outputDebugString(file->getFullPathName());
+	
+	ScopedPointer<AudioFormatReader> fileReader = formatManager.createReaderFor(*file);
+	BigInteger note;
+	note.setBit(midiNote);
+
+	addSound(new CTAGSamplerSound(instrument, *fileReader, note, midiNote, 0.0f, 10.0f, 10.0f));
+
+	fileReader = nullptr;
+	delete file;
+
+	
 }

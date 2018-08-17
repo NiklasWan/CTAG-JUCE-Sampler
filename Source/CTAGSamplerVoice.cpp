@@ -114,9 +114,10 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			r = shaper.processSample(r);
 
 			//Filter
-			filter.update();
-			l = filter.doFilter(l);
-			r = filter.doFilter(r);
+			filterLeft.update();
+			filterRight.update();
+			l = filterLeft.doFilter(l);
+			r = filterRight.doFilter(r);
 
 
 			if (outR != nullptr)

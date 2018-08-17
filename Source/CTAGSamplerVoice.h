@@ -21,7 +21,7 @@ private:
 	int pitchVal;
 	BigInteger midiNote;
 	CEnvelopeGenerator env;
-	CVAOnePoleFilter filter;
+	CVAOnePoleFilter filterLeft, filterRight;
 	WaveShaper shaper;
 	int index;
 	LinearSmoothedValue<double> shaperAmp;
@@ -33,7 +33,8 @@ public:
 		shaperAmp.setValue(0.2);
 	}
 	CEnvelopeGenerator & getEnvelope() { return env; }
-	CVAOnePoleFilter& getFilter() { return filter; }
+	CVAOnePoleFilter& getFilterLeft() { return filterLeft; }
+	CVAOnePoleFilter& getFilterRight() { return filterRight; }
 	bool canPlaySound(SynthesiserSound* sampSound) override;
 	void startNote(int midiNoteNumber, float velocity, SynthesiserSound* sampSound, int pitchWheel) override;
 	void stopNote(float velocity, bool allowTailOff) override;
@@ -50,7 +51,8 @@ public:
 			currSampRate = newRate;
 			shaperAmp.reset(currSampRate, 0.01);
 			env.setSampleRate(currSampRate);
-			filter.setSampleRate(currSampRate);
+			filterLeft.setSampleRate(currSampRate);
+			filterRight.setSampleRate(currSampRate);
 		}
 	}
 
@@ -71,11 +73,19 @@ public:
 	void setEnvelopeRelease(double time) { env.setReleaseTime_mSec(time); }
 
 	//Geter/Setter Filter
-	bool isFilterActive() { return filter.isActive(); }
-	void setFilterActive(bool val) { filter.setActive(val); }
+	bool isFilterActive() { return filterLeft.isActive() && filterRight.isActive(); }
+	void setFilterActive(bool val)
+	{
+		filterLeft.setActive(val);
+		filterRight.setActive(val);
+	}
 
-	double getCutoffFreq() { return filter.m_dFcControl; }
-	void setCutoffFreq(double fc) { filter.m_dFcControl = fc; }
+	double getCutoffFreq() { return filterLeft.m_dFcControl; }
+	void setCutoffFreq(double fc)
+	{
+		filterLeft.m_dFcControl = fc;
+		filterRight.m_dFcControl = fc;
+	}
 
 	//Getter/Setter Waveshaper
 	bool isWaveShaperActive() { return shaper.isActive(); }

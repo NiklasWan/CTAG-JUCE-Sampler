@@ -34,6 +34,10 @@
               file="Source/CTAGInstrumentComponent.cpp"/>
         <FILE id="BflLFN" name="CTAGInstrumentComponent.h" compile="0" resource="0"
               file="Source/CTAGInstrumentComponent.h"/>
+        <FILE id="Bh59aW" name="CTAGMainControls.cpp" compile="1" resource="0"
+              file="Source/CTAGMainControls.cpp"/>
+        <FILE id="w4Dsqh" name="CTAGMainControls.h" compile="0" resource="0"
+              file="Source/CTAGMainControls.h"/>
         <FILE id="SDvCLW" name="CTAGTabComponent.cpp" compile="1" resource="0"
               file="Source/CTAGTabComponent.cpp"/>
         <FILE id="Uk6yhp" name="CTAGTabComponent.h" compile="0" resource="0"

@@ -1,12 +1,13 @@
 #include "CTAGTabComponent.h"
 
 
+
 CTAGTabComponent::CTAGTabComponent(JucesamplerAudioProcessor& p) : processor(p)
 {
 	tabbedComponent = new TabbedComponent(TabbedButtonBar::TabsAtTop);
 
 	//Add all Tabs
-	tabbedComponent->addTab(translate("MainControl"), Colours::lightgrey, 0, false);
+	tabbedComponent->addTab(translate("MainControl"), Colours::lightgrey, new CTAGMainControls(p), true);
 	tabbedComponent->addTab(translate("Kick"), Colours::lightgrey, new CTAGInstrumentComponent(p), true);
 	tabbedComponent->addTab(translate("Snare"), Colours::lightgrey, new CTAGInstrumentComponent(p), true);
 	tabbedComponent->addTab(translate("Clap"), Colours::lightgrey, new CTAGInstrumentComponent(p), true);

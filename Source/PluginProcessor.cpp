@@ -156,7 +156,8 @@ void JucesamplerAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 		if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
 		{
 			voice->getEnvelope().setSampleRate(sampleRate);
-			voice->getFilter().setSampleRate(sampleRate);
+			voice->getFilterLeft().setSampleRate(sampleRate);
+			voice->getFilterRight().setSampleRate(sampleRate);
 		}
 	}
 }
