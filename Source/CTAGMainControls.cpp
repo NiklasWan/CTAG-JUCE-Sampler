@@ -21,6 +21,7 @@
 //[/Headers]
 
 #include "CTAGMainControls.h"
+#include "PluginEditor.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
@@ -119,7 +120,7 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
     loadSamplesButton->setBounds (224, 232, 150, 24);
 
-
+	
     //[UserPreSize]
     //[/UserPreSize]
 
@@ -187,12 +188,30 @@ void CTAGMainControls::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     {
         //[UserComboBoxCode_rootNoteComboBox] -- add your combo box handling code here..
 		indexRootNote = rootNoteComboBox->getSelectedItemIndex();
+		
         //[/UserComboBoxCode_rootNoteComboBox]
     }
     else if (comboBoxThatHasChanged == scaleComboBox)
     {
         //[UserComboBoxCode_scaleComboBox] -- add your combo box handling code here..
 		indexMode = scaleComboBox->getSelectedItemIndex();
+		if (auto e = dynamic_cast<JucesamplerAudioProcessorEditor*>(processor.getActiveEditor()))
+		{
+			Array<CTAGInstrumentComponent*>  views = e->tabComponent->getInstrumentViews();
+			for (auto view : views)
+			{
+				if(scaleComboBox->getItemText(indexMode) == String("Chromatic"))
+				{
+					view->pitchSlider->setRange(-12, 12, 1);
+				}
+				else if(scaleComboBox->getItemText(indexMode) != String("Chromatic"))
+				{
+					view->pitchSlider->setRange(-7, 7, 1);
+				}
+				view->pitchCalc.setScale(indexMode);
+			}
+				
+		}
         //[/UserComboBoxCode_scaleComboBox]
     }
 
@@ -209,6 +228,17 @@ void CTAGMainControls::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_loadSamplesButton] -- add your button handler code here..
 		loadSampleData();
+
+		if (auto e = dynamic_cast<JucesamplerAudioProcessorEditor*>(processor.getActiveEditor()))
+		{
+			Array<CTAGInstrumentComponent*> views = e->tabComponent->getInstrumentViews();
+			for (auto view : views)
+			{
+				view->pitchCalc.setRootNote(rootNoteComboBox->getItemText(indexRootNote));
+				view->pitchValLabel->setText(rootNoteComboBox->getItemText(indexRootNote), NotificationType::sendNotification);
+			}
+
+		}
         //[/UserButtonCode_loadSamplesButton]
     }
 

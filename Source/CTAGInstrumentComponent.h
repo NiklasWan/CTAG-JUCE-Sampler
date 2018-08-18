@@ -1,8 +1,9 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "PitchRateConversion.h"
 
-class CTAGInstrumentComponent : public Component, public Button::Listener
+class CTAGInstrumentComponent : public Component, public Button::Listener, public Slider::Listener
 {
 public:
 	CTAGInstrumentComponent(JucesamplerAudioProcessor& p);
@@ -12,8 +13,12 @@ public:
 	void resized() override;
 
 	void buttonClicked(Button*) override;
+	void sliderValueChanged(Slider* slider) override;
+	PitchRateConversion pitchCalc;
 
 private:
+	friend class CTAGMainControls;
+	
 	static int counter;
 	JucesamplerAudioProcessor& processor;
 	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> attackAmpAttach;
@@ -43,6 +48,8 @@ private:
 	ScopedPointer<Slider> distortionSlider;
 	ScopedPointer<Label> pitchLabel;
 	ScopedPointer<Slider> pitchSlider;
+	ScopedPointer<Slider> pitchDummy;
+	ScopedPointer<Label> pitchValLabel;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CTAGInstrumentComponent)
 };

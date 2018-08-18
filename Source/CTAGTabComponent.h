@@ -14,9 +14,13 @@ public:
 	void paint(Graphics& g) override;
 	void resized() override;
 
+	TabbedComponent& getTabbedComponenet() { return *tabbedComponent; }
+	Array<CTAGInstrumentComponent*> getInstrumentViews() { return instruments; }
 private:
 	JucesamplerAudioProcessor& processor;
 	ScopedPointer<TabbedComponent> tabbedComponent;
+	Array<CTAGInstrumentComponent*> instruments;
+	
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CTAGTabComponent)
 };

@@ -42,6 +42,10 @@
               file="Source/CTAGTabComponent.cpp"/>
         <FILE id="Uk6yhp" name="CTAGTabComponent.h" compile="0" resource="0"
               file="Source/CTAGTabComponent.h"/>
+        <FILE id="h0GYjf" name="PitchRateConversion.cpp" compile="1" resource="0"
+              file="Source/PitchRateConversion.cpp"/>
+        <FILE id="Rjbwuy" name="PitchRateConversion.h" compile="0" resource="0"
+              file="Source/PitchRateConversion.h"/>
       </GROUP>
       <FILE id="OQ8t2G" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

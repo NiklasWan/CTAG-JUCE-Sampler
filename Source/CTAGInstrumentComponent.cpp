@@ -3,6 +3,7 @@
 
 int CTAGInstrumentComponent::counter = 0;
 
+
 CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) : processor(p)
 {
 	attackSlider = new Slider("attackSlider");
@@ -119,16 +120,27 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	pitchLabel->setEditable(false, false, false);
 	pitchLabel->setColour(TextEditor::textColourId, Colours::black);
 	pitchLabel->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
-	pitchLabel->setBounds(468, 128, 72, 24);
+	pitchLabel->setBounds(488, 128, 80, 20);
 	addAndMakeVisible(pitchLabel);
 
 	pitchSlider = new Slider("pitchSlider");
 	pitchSlider->setSliderStyle(Slider::IncDecButtons);
-	pitchSlider->setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
+	pitchSlider->setTextBoxStyle(Slider::NoTextBox, false, 80, 20);
 	pitchSlider->setRange(-12, 12, 1);
 	pitchSlider->setValue(0);
 	pitchSlider->setBounds(488, 168, 80, 80);
+	pitchSlider->addListener(this);
 	addAndMakeVisible(pitchSlider);
+
+	pitchDummy = new Slider("pitchDummy");
+	pitchDummy->setRange(-12, 12, 1);
+	pitchDummy->setValue(0);
+
+	pitchValLabel = new Label("pitchValLabel", translate("C"));
+	pitchValLabel->setBounds(488, 248, 80, 20);
+	pitchValLabel->setJustificationType(Justification::centred);
+	pitchValLabel->setFont(Font(15.00f, Font::plain).withTypefaceStyle("Regular"));
+	addAndMakeVisible(pitchValLabel);
 
 	setSize(600, 375);
 
@@ -142,7 +154,7 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 
 	filterCutoffAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("filterCutoff" + String(counter)), *filterSlider);
 	distortionValueAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("distortionVal" + String(counter)), *distortionSlider);
-	pitchValueAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("pitchVal" + String(counter)), *pitchSlider);
+	pitchValueAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("pitchVal" + String(counter)), *pitchDummy);
 
 	counter++;
 }
@@ -174,6 +186,8 @@ CTAGInstrumentComponent::~CTAGInstrumentComponent()
 	sustainSlider = nullptr;
 	decaySlider = nullptr;
 	attackSlider = nullptr;
+	pitchDummy = nullptr;
+	pitchValLabel = nullptr;
 	counter--;
 }
 
@@ -205,4 +219,15 @@ void CTAGInstrumentComponent::buttonClicked(Button* buttonThatWasClicked)
 	}
 }
 
+void CTAGInstrumentComponent::sliderValueChanged(Slider* slider)
+{
+	if(slider == pitchSlider)
+	{
+		auto sliderVal = slider->getValue();
+		int factor = pitchCalc.performPithShift(sliderVal);
+		pitchDummy->setValue(factor);
+		String tb = pitchCalc.getTextBoxSymbol(sliderVal);
+		pitchValLabel->setText(tb, NotificationType::sendNotification);
+	}
+}
 
