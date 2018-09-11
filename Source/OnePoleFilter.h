@@ -1,50 +1,65 @@
+/**
+	Describes a basic One Pole Filter.
+
+	Based on an implementation from Will Pirkle
+	(http://www.willpirkle.com/)
+
+	@author Niklas Wantrupp
+	@version v1.0 11/09/2018
+*/
+
 #pragma once
 
 #include "Filter.h"
 
 
-class CVAOnePoleFilter : public CFilter
+class VAOnePoleFilter : public Filter
 {
 public:
-	CVAOnePoleFilter(void);
+	VAOnePoleFilter(void);
+
 	
 
-	// Trapezoidal Integrator Components
-	double m_dAlpha;			// Feed Forward coeff
+	/**
+		This is used to set the feedback of the filter.
+	*/
+	void setFeedback(double feedback) { this->feedback = feedback; }
 
-								// -- ADDED for Korg35 and Moog Ladder Filter ---- //
-	double m_dBeta;
+	/**
 
-	// -- ADDED for Diode Ladder Filter  ---- //
-	double m_dGamma;		// Pre-Gain
-	double m_dDelta;		// FB_IN Coeff
-	double m_dEpsilon;		// FB_OUT scalar
-	double m_da0;			// input gain
+		Allows acces to feedback output.
+	*/
+	double getFeedbackOutput() { return beta * (z1 + feedback * delta); }
 
-							// note: this is NOT being used as a z-1 storage register!
-	double m_dFeedback;		// our own feedback coeff from S 
 
-							// provide access to set feedback input
-	void setFeedback(double fb) { m_dFeedback = fb; }
+	/**
 
-	// provide access to our feedback output
-	// m_dFeedback & m_dDelta = 0 for non-Diode filters
-	double getFeedbackOutput() { return m_dBeta * (m_dZ1 + m_dFeedback * m_dDelta); }
+		Resets the filter.
+	*/
 
-	// original function
-	// double getFeedbackOutput(){return m_dZ1*m_dBeta;}
-	// ----------------------------------------------- //
+	virtual void reset() { z1 = 0; feedback = 0; }
 
-	// -- CFilter Overrides ---
-	virtual void reset() { m_dZ1 = 0; m_dFeedback = 0; }
+	/**
 
-	// recalc the coeff
+		Recalculates the coefficients.
+	*/
 	virtual void update();
 
-	// do the filter
+
+	/**
+
+		Performs the actual filter calculation.
+	*/
 	virtual double doFilter(double xn);
 
 protected:
-	double m_dZ1;		// our z-1 storage location
+	double alpha;
+	double beta;
+	double gamma;
+	double delta;
+	double epsilon;
+	double inputGain;
+	double feedback;
+	double z1;
 };
 

@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    CTAGSamplerVoice.cpp
-    Created: 16 Jul 2018 10:56:49pm
-    Author:  nikla
-
-  ==============================================================================
-*/
-
 #include "CTAGSamplerVoice.h"
 
 
@@ -83,7 +73,7 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 	
 	if (auto* playingSound = dynamic_cast<CTAGSamplerSound*> (getCurrentlyPlayingSound().get()))
 	{
-		auto& data = *playingSound->data;
+		auto& data = *playingSound->getAudioData();
 		const float* const inL = data.getReadPointer(0);
 		const float* const inR = data.getNumChannels() > 1 ? data.getReadPointer(1) : nullptr;
 

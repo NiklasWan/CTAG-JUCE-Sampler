@@ -1,11 +1,8 @@
-/*
-  ==============================================================================
+/**
+	A tanh waveshaper.
 
-    WaveShaper.h
-    Created: 14 Aug 2018 2:00:57pm
-    Author:  nikla
-
-  ==============================================================================
+	@author Niklas Wantrupp
+	@version v1.0 11/09/2018
 */
 
 #pragma once
@@ -15,15 +12,60 @@ class WaveShaper
 {
 private:
 	double ampFactorPositive, ampFactorNegative;
-	bool activity;
+	bool activeState;
 public:
 	WaveShaper();
-	void setPositiveAmplification(double amp);
-	void setNegativeAmplification(double amp);
+
+	/**
+	 
+		Sets the positive amplification for the Shaper.	
+	*/
+
+	void setPositiveAmplification(double ampFactorPositive);
+
+
+	/**
+
+		Sets the negative amplification for the Shaper.
+	*/
+
+	void setNegativeAmplification(double ampFactorNegative);
+
+	/**
+
+		When used as a symmetrical Shaper this returns the amplification Factor.
+	*/
+
+
 	double getSymmetrical() { return ampFactorNegative; }
-	bool isActive() { return activity; }
-	void setActive(bool active) { activity = active; }
-	void setAmplificationSymmetrical(double amp);
+
+	/**
+
+		Cecks whether the processor is active or inactive.
+	*/
+
+	bool isActive() { return activeState; }
+
+	/**
+
+		Sets whether the processor is active or inactive.
+	*/
+
+	void setActive(bool activeState) { this->activeState = activeState; }
+
+	/**
+
+		When used as a symmetrical Shaper this sets the amplification Factor.
+	*/
+
+	void setAmplificationSymmetrical(double ampFactorSymmetrical);
+
+	/**
+
+		Processes the Sample passed to the function.
+	*/
+
+
 	inline double processSample(double xn)
 	{
 		if (!isActive()) return xn;

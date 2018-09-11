@@ -208,7 +208,7 @@ void CTAGMainControls::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				{
 					view->pitchSlider->setRange(-7, 7, 1);
 				}
-				view->pitchCalc.setScale(indexMode);
+				view->pitchCalc.setMode(indexMode);
 			}
 				
 		}

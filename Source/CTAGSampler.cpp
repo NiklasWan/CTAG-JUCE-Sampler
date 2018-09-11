@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    CTAGSampler.cpp
-    Created: 16 Jul 2018 10:56:28pm
-    Author:  nikla
-
-  ==============================================================================
-*/
-
 #include "CTAGSampler.h"
 
 #define NUM_VOICES 9
@@ -57,58 +47,7 @@ void CTAGSampler::setup()
 	}
 	
 	formatManager.registerBasicFormats();
-	/*
-	setInstrument("Kick.wav", 36, KICK);
-	setInstrument("Snare.wav", 38, SNARE);
-	setInstrument("Clap.wav", 39, CLAP);
-	setInstrument("Tom.wav", 41, TOM);
-	setInstrument("ClHat.wav", 42, CLHAT);
-	setInstrument("Perc.wav", 43, PERC);
-	setInstrument("OpHat.wav", 46, OPHAT);
-	setInstrument("Crash.wav", 49, CRASH);
-	setInstrument("Ride.wav", 51, RIDE);*/
 	loadSamples("Kit 1", "C");
-}
-
-void CTAGSampler::setInstrument(String audioFile, int midiNote, int instrument)
-{
-	// Is there an old Sound to be recycled?
-	if (auto* oldSound = dynamic_cast<CTAGSamplerSound*>(getSound(instrument)))
-	{
-		recycleSound(audioFile, oldSound, midiNote);
-		return;
-	}
-	CTAGSamplerSound* newSound = prepareSound(audioFile, midiNote);
-	addSound(newSound);
-}
-
-// Take Parameters of old Sound, destroy it and create new sound with same parameters
-
-void CTAGSampler::recycleSound(String audioFile, CTAGSamplerSound* oldSound, int midiNote)
-{
-	
-
-
-	CTAGSamplerSound* newSound = prepareSound(audioFile, midiNote);
-
-	
-	removeSound(KICK);
-
-	addSound(newSound);
-}
-
-// Create a new Sound
-
-CTAGSamplerSound* CTAGSampler::prepareSound(String audioFile, int midiNote)
-{
-	File* file = new File(File::getCurrentWorkingDirectory().getChildFile(audioFile));
-
-	ScopedPointer<AudioFormatReader> fileReader = formatManager.createReaderFor(*file);
-
-	BigInteger note;
-	note.setBit(midiNote);;
-
-	return new CTAGSamplerSound(audioFile, *fileReader, note, midiNote, 0.0f, 10.0f, 10.0f);
 }
 
 

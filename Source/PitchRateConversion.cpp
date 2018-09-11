@@ -1,23 +1,16 @@
-/*
-  ==============================================================================
-
-    PitchRateConversion.cpp
-    Created: 18 Aug 2018 6:44:54pm
-    Author:  nikla
-
-  ==============================================================================
-*/
-
 #include "PitchRateConversion.h"
+
+
+
 PitchRateConversion::PitchRateConversion()
 {
-	setScale(CHROMATIC);
+	setMode(CHROMATIC);
 	setRootNote("C");
 }
 
 int PitchRateConversion::performPithShift(int value)
 {
-	if (scale == 0) return value;
+	if (mode == 0) return value;
 	return conversionTable[value + 7];
 }
 

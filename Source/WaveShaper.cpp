@@ -1,44 +1,43 @@
-/*
-  ==============================================================================
-
-    WaveShaper.cpp
-    Created: 14 Aug 2018 2:00:57pm
-    Author:  nikla
-
-  ==============================================================================
-*/
-
 #include "WaveShaper.h"
+
+
+
 WaveShaper::WaveShaper()
 {
 	ampFactorPositive = ampFactorNegative = 0.2f;
-	activity = false;
+	activeState = false;
 }
 
-void WaveShaper::setPositiveAmplification(double amp)
+void WaveShaper::setPositiveAmplification(double ampFactorPositive)
 {
-	if (amp < 0.2f)
-		ampFactorPositive = 0.2f;
-	if (amp > 5.0f)
-		ampFactorPositive = 5.0f;
+
+	/**
+	
+		Only values between 0.2 and 5.0 are allowed.
+	*/
+
+	if (ampFactorPositive < 0.2f)
+		this->ampFactorPositive = 0.2f;
+	if (ampFactorPositive > 5.0f)
+		this->ampFactorPositive = 5.0f;
 	else
-		ampFactorPositive = amp;
+		this->ampFactorPositive = ampFactorPositive;
 }
 
-void WaveShaper::setNegativeAmplification(double amp)
+void WaveShaper::setNegativeAmplification(double ampFactorNegative)
 {
-	if (amp < 0.2f)
-		ampFactorNegative = 0.2f;
-	if (amp > 5.0f)
-		ampFactorNegative = 5.0f;
+	if (ampFactorNegative < 0.2f)
+		this->ampFactorNegative = 0.2f;
+	if (ampFactorNegative > 5.0f)
+		this->ampFactorNegative = 5.0f;
 	else
-		ampFactorNegative = amp;
+		this->ampFactorNegative = ampFactorNegative;
 }
 
-void WaveShaper::setAmplificationSymmetrical(double amp)
+void WaveShaper::setAmplificationSymmetrical(double ampFactorSymmetrical)
 {
-	setPositiveAmplification(amp);
-	setNegativeAmplification(amp);
+	setPositiveAmplification(ampFactorSymmetrical);
+	setNegativeAmplification(ampFactorSymmetrical);
 }
 
 

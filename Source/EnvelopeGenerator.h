@@ -1,258 +1,382 @@
+/**
+	Implementation of an envelope generator.
+
+
+	Based on an Implementation by Will Pirkle
+	(http://www.willpirkle.com/)
+
+	@author Niklas Wantrupp
+	@version v1.0 11/09/2018
+*/
+
+
 #pragma once
 
+#include <cmath>
+#define EG_DEFAULT_STATE_TIME 1000 
 
-#define EG_DEFAULT_STATE_TIME 1000 // 1000 mSec
 
-
-class CEnvelopeGenerator
+class EnvelopeGenerator
 {
 public:
-	CEnvelopeGenerator(void);
-	
+	EnvelopeGenerator(void);
 
-	// --- analog and digital mode
-	int m_uEGMode;
+
+
+	int envelopeMode;
 	enum { analog, digital };
 
-	// --- special modes
-	bool m_bResetToZero; // return to zero
-	bool m_bLegatoMode;  // S-trigger
-	bool m_bOutputEG;	 // true if this EG is being used to control the DCA output
+
+	bool resetToZeroMode;
+	bool legatoMode;
+	bool isControllingDCA;
 
 protected:
-	double m_dSampleRate;
+	double sampleRate;
 
-	// --- current output
-	double m_dEnvelopeOutput;
 
-	//--- Coefficient, offset and TCO values
-	//    for each state
-	double m_dAttackCoeff;
-	double m_dAttackOffset;
-	double m_dAttackTCO;
+	double envelopeOutput;
 
-	double m_dDecayCoeff;
-	double m_dDecayOffset;
-	double m_dDecayTCO;
 
-	double m_dReleaseCoeff;
-	double m_dReleaseOffset;
-	double m_dReleaseTCO;
+	double attackCoeff;
+	double attackOffset;
+	double attackTCO;
 
-	//--- ADSR times from user
-	double m_dAttackTime_mSec;	// att: is a time duration
-	double m_dDecayTime_mSec;	// dcy: is a time to decay 1->0
-	double m_dReleaseTime_mSec;	// rel: is a time to decay 1->0
+	double decayCoeff;
+	double decayOffset;
+	double decayTCO;
 
-								// --- this is set internally; user normally not allowed to adjust
-	double m_dShutdownTime_mSec; // shutdown is a time
+	double releaseCoeff;
+	double releaseOffset;
+	double releaseTCO;
 
-								 // --- sustain is a level, not a time
-	double m_dSustainLevel;
 
-	// --- inc value for shutdown
-	double m_dIncShutdown;
+	double attackTime;
+	double decayTime;
+	double releaseTime;
 
-	// --- stage variable
-	int m_uState;
+
+	double shutdownTime;
+
+
+	double sustainLevel;
+
+
+	double incValueShutdown;
+
+
+	int envelopeState;
 	enum { off, attack, decay, sustain, release, shutdown };
 
 public:
 
-	double getAttackTime() { return m_dAttackTime_mSec; }
-	double getDecayTime() { return m_dDecayTime_mSec; }
-	double getSustainValue() { return m_dSustainLevel; }
-	double getReleaseTime() { return m_dReleaseTime_mSec; }
-	// --- accessors - allow owner to get our state
-	inline int getState() { return m_uState; }
+	/**
 
-	// --- is the EG active
+		Returns attack time in ms of the envelope.
+	*/
+
+	double getAttackTime() { return attackTime; }
+
+	/**
+
+		Returns decay time in ms of the envelope.
+	*/
+
+	double getDecayTime() { return decayTime; }
+
+	/**
+
+		Returns sustain level of the envelope.
+	*/
+
+	double getSustainValue() { return sustainLevel; }
+
+	/**
+
+		Returns release time in ms of the envelope.
+	*/
+
+	double getReleaseTime() { return releaseTime; }
+
+
+	/**
+
+		Returns state of the envelope.
+	*/
+
+	inline int getState() { return envelopeState; }
+
+	/**
+
+		Returns whether the envelope is active or inactive.
+	*/
+
 	inline bool isActive()
 	{
-		if (m_uState != release && m_uState != off)
+		if (envelopeState != release && envelopeState != off)
 			return true;
 		return false;
 	}
 
-	// --- can do note off now?
+	/**
+
+		Checks whether noteOff() can be used.
+	*/
+
 	inline bool canNoteOff()
 	{
-		if (m_uState != release && m_uState != shutdown && m_uState != off)
+		if (envelopeState != release && envelopeState != shutdown && envelopeState != off)
 			return true;
 		return false;
 	}
 
-	// --- reset
+	/**
+
+		Resets the envelope.
+	*/
+
 	void reset();
 
-	// --- function to set the time constants
-	void setEGMode(int u);
+	/**
 
-	// --- calculate time params
+		Set the envelope mode.
+	*/
+
+
+	void setEGMode(int envelopeMode);
+
+	/**
+
+		Calculate attack time parameters.
+	*/
+
 	void calculateAttackTime();
+
+	/**
+
+		Calculate decay time parameters.
+	*/
+
 	void calculateDecayTime();
+
+	/**
+
+		Calculate release time parameters.
+	*/
+
 	void calculateReleaseTime();
 
-	// --- go to release state; reset counter
+
+	/**
+
+		Goes to the release state and resets the counter.
+	*/
+
 	void noteOff();
 
-	// --- go to shutdown state
+
+	/**
+
+		Goes to shutdown state.
+	*/
+
 	void shutDown();
 
-	// --- mutators
-	//	inline void setState(UINT u){m_uState = u;}
-	inline void setSampleRate(double d) { m_dSampleRate = d; }
 
-	// --- called during updates
-	inline void setAttackTime_mSec(double d)
+	inline void setSampleRate(double sampleRate) { this->sampleRate = sampleRate; }
+
+
+	/**
+
+		Set the attack time in msec.
+	*/
+
+
+	inline void setAttackTime_mSec(double attackTime)
 	{
-		m_dAttackTime_mSec = d;
+		this->attackTime = attackTime;
 		calculateAttackTime();
 	}
-	inline void setDecayTime_mSec(double d)
+
+	/**
+
+		Set the decay time in msec.
+	*/
+
+	inline void setDecayTime_mSec(double decayTime)
 	{
-		m_dDecayTime_mSec = d;
+		this->decayTime = decayTime;
 		calculateDecayTime();
 	}
-	inline void setReleaseTime_mSec(double d)
+
+	/**
+
+		Set the release time in msec.
+	*/
+
+	inline void setReleaseTime_mSec(double releaseTime)
 	{
-		m_dReleaseTime_mSec = d;
+		this->releaseTime = releaseTime;
 		calculateReleaseTime();
 	}
-	// --- sustain is a level not a time
-	inline void setSustainLevel(double d)
-	{
-		m_dSustainLevel = d;
 
-		// --- sustain level affects decay
+
+	/**
+
+		Set the sustain level.
+	*/
+
+	inline void setSustainLevel(double sustainLevel)
+	{
+		this->sustainLevel = sustainLevel;
+
+
 		calculateDecayTime();
 
-		// --- and release, if not in release state
-		if (m_uState != release)
+
+		if (envelopeState != release)
 			calculateReleaseTime();
 	}
 
-	// reset and go to attack state
+	/**
+
+		Start the envelope generator.
+	*/
+
+
 	inline void startEG()
 	{
-		// --- ignore
-		if (m_bLegatoMode && m_uState != off && m_uState != release)
+		/**
+
+			Ignore when in legato mode
+		*/
+
+		if (legatoMode && envelopeState != off && envelopeState != release)
 			return;
 
-		// --- reset and go
+
 		reset();
-		m_uState = attack;
+		envelopeState = attack;
 	}
 
-	// --- go to off state
+	/**
+
+		Set envelope state to off.
+	*/
+
 	inline void stopEG()
 	{
-		m_uState = off;
+		envelopeState = off;
 	}
 
-	// --- update params
+	/**
+
+		Update parameters.
+	*/
 	inline void update()
 	{
 		// nothing yet
 	}
 
-	/* do the envelope
-	returns normal Envelope out
-	optionally, can get biased output in argument
+	/**
+
+		Perform envelope operation.
+		Optionally can have biased output.
 	*/
-	inline double doEnvelope(double* pBiasedOutput = nullptr)
+
+
+	inline double doEnvelope(double* biasedOutput = nullptr)
 	{
-		// --- decode the state
-		switch (m_uState)
+
+		switch (envelopeState)
 		{
 		case off:
 		{
-			// --- output is OFF
-			if (m_bResetToZero)
-				m_dEnvelopeOutput = 0.0;
+
+			if (resetToZeroMode)
+				envelopeOutput = 0.0;
 			break;
 		}
 		case attack:
 		{
-			// --- render value
-			m_dEnvelopeOutput = m_dAttackOffset + m_dEnvelopeOutput * m_dAttackCoeff;
 
-			// --- check go to next state
-			if (m_dEnvelopeOutput >= 1.0 || m_dAttackTime_mSec <= 0.0)
+			envelopeOutput = attackOffset + envelopeOutput * attackCoeff;
+
+
+			if (envelopeOutput >= 1.0 || attackTime <= 0.0)
 			{
-				m_dEnvelopeOutput = 1.0;
-				m_uState = decay;	// go to next state
+				envelopeOutput = 1.0;
+				envelopeState = decay;
 				break;
 			}
 			break;
 		}
 		case decay:
 		{
-			// --- render value
-			m_dEnvelopeOutput = m_dDecayOffset + m_dEnvelopeOutput * m_dDecayCoeff;
 
-			// --- check go to next state
-			if (m_dEnvelopeOutput <= m_dSustainLevel || m_dDecayTime_mSec <= 0.0)
+			envelopeOutput = decayOffset + envelopeOutput * decayCoeff;
+
+
+			if (envelopeOutput <= sustainLevel || decayTime <= 0.0)
 			{
-				m_dEnvelopeOutput = m_dSustainLevel;
-				m_uState = sustain;		// go to next state
+				envelopeOutput = sustainLevel;
+				envelopeState = sustain;
 				break;
 			}
 			break;
 		}
 		case sustain:
 		{
-			// --- render value
-			m_dEnvelopeOutput = m_dSustainLevel;
+
+			envelopeOutput = sustainLevel;
 			break;
 		}
 		case release:
 		{
-			// --- render value
-			m_dEnvelopeOutput = m_dReleaseOffset + m_dEnvelopeOutput * m_dReleaseCoeff;
 
-			// --- check go to next state
-			if (m_dEnvelopeOutput <= 0.0 || m_dReleaseTime_mSec <= 0.0)
+			envelopeOutput = releaseOffset + envelopeOutput * releaseCoeff;
+
+
+			if (envelopeOutput <= 0.0 || releaseTime <= 0.0)
 			{
-				m_dEnvelopeOutput = 0.0;
-				m_uState = off;		// go to next state
+				envelopeOutput = 0.0;
+				envelopeState = off;
 				break;
 			}
 			break;
 		}
 		case shutdown:
 		{
-			if (m_bResetToZero)
+			if (resetToZeroMode)
 			{
-				// --- the shutdown state is just a linear taper since it is so short
-				m_dEnvelopeOutput += m_dIncShutdown;
 
-				// --- check go to next state
-				if (m_dEnvelopeOutput <= 0)
+				envelopeOutput += incValueShutdown;
+
+
+				if (envelopeOutput <= 0)
 				{
-					m_uState = off;		// go to next state
-					m_dEnvelopeOutput = 0.0; // reset envelope
+					envelopeState = off;
+					envelopeOutput = 0.0;
 					break;
 				}
 			}
 			else
 			{
-				// --- we are guaranteed to be retriggered
-				//     just go to off state
-				m_uState = off;
+
+				envelopeState = off;
 			}
 			break;
 		}
 		}
 
-		// --- set the biased (pitchEG) output if there is one
-		if (pBiasedOutput)
-			*pBiasedOutput = m_dEnvelopeOutput - m_dSustainLevel;
 
-		// --- set the normal
-		return m_dEnvelopeOutput;
+		if (biasedOutput)
+			*biasedOutput = envelopeOutput - sustainLevel;
+
+
+		return envelopeOutput;
 	}
 
 
-	
+
 };

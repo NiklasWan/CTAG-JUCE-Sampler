@@ -1,11 +1,10 @@
-/*
-  ==============================================================================
+/**
+	The Pitch Rate Conversion Class can pitch given Values in a selected mode.
 
-    PitchRateConversion.h
-    Created: 18 Aug 2018 6:44:54pm
-    Author:  nikla
 
-  ==============================================================================
+
+	@author Niklas Wantrupp
+	@version v1.0 11/09/2018
 */
 
 #pragma once
@@ -21,7 +20,7 @@ static StringArray symbols = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", 
 class PitchRateConversion
 {
 private:
-	int scale;
+	int mode;
 	int* conversionTable;
 	int rootIndex;
 
@@ -29,12 +28,25 @@ private:
 	
 public:
 	PitchRateConversion();
-	int getScale() { return scale; }
+
+	/**
+		Returns the current mode.
+	*/
+	int getMode() { return mode; }
+
+	/**
+		Sets the root note.
+	*/
 	void setRootNote(String root) { rootIndex = symbols.indexOf(root);  }
-	void setScale(int scale)
+
+	/**
+		Use this to set your mode you would like to use.
+	*/
+
+	void setMode(int mode)
 	{
-		this->scale = scale;
-		switch(scale)
+		this->mode = mode;
+		switch(mode)
 		{
 		case MAJOR:
 			conversionTable = major;
@@ -54,7 +66,15 @@ public:
 		}
 		
 	}
+
+	/**
+		Input a value between -7 and 7 and the corresponding in Juce String format is returned.
+	*/
 	String getTextBoxSymbol(int value);
+
+	/**
+		Input a value between -7 and 7 and the corresponding semitone value is returned.
+	*/
 	int performPithShift(int value);
 	
 	

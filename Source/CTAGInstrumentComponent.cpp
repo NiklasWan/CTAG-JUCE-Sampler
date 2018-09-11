@@ -226,8 +226,8 @@ void CTAGInstrumentComponent::sliderValueChanged(Slider* slider)
 		auto sliderVal = slider->getValue();
 		int factor = pitchCalc.performPithShift(sliderVal);
 		pitchDummy->setValue(factor);
-		String tb = pitchCalc.getTextBoxSymbol(sliderVal);
-		pitchValLabel->setText(tb, NotificationType::sendNotification);
+		String textBoxSymbol = pitchCalc.getTextBoxSymbol(sliderVal);
+		pitchValLabel->setText(textBoxSymbol, NotificationType::sendNotification);
 	}
 }
 

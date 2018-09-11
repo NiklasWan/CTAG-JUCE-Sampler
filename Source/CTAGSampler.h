@@ -1,12 +1,12 @@
-/*
-  ==============================================================================
+/**
+	The Sampler which handles all incoming midi messages and plays the corresponding sounds.
 
-    CTAGSampler.h
-    Created: 16 Jul 2018 10:56:28pm
-    Author:  nikla
 
-  ==============================================================================
+
+	@author Niklas Wantrupp
+	@version v1.0 11/09/2018
 */
+
 
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -19,18 +19,29 @@ class CTAGSampler : public Synthesiser
 	AudioFormatManager formatManager;
 	File samplesFolder;
 	StringArray instruments;
-
-public:
-	
-	void setup();
-	void setInstrument(String audioFile, int midNote, int instrument);
-	void recycleSound(String audioFile, CTAGSamplerSound* oldSound, int midiNote);
-	CTAGSamplerSound* prepareSound(String audioFile, int midiNote);
-	void loadSamples(String kit, String rootNote);
+	/**
+		This function is a private helper function to loadSamples() and loads a specific file into memory and adds it to the sounds array of CTAGSampler. 
+	*/
 	void addCTAGSound(String instrument, String filename, String kit);
-	typedef enum Sounds { KICK = 0, SNARE, CLAP, TOM, CLHAT, PERC, OPHAT, CRASH, RIDE }Sounds_t;
-
+public:
+	//Override Methods
 	void noteOn(int midiChannel,
 		int midiNoteNumber,
 		float velocity) override;
+
+	/**
+		The setup function for the sampler. 
+	*/
+
+	void setup();
+
+
+	/**
+		This function enables you to load a drum kit. 
+	*/
+	void loadSamples(String kit, String rootNote);
+	
+	typedef enum Sounds { KICK = 0, SNARE, CLAP, TOM, CLHAT, PERC, OPHAT, CRASH, RIDE }Sounds_t;
+
+	
 };
