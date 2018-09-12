@@ -211,5 +211,10 @@ void CTAGSampler::parameterChanged(const String &parameterID, float newValue)
 	if (parameterID == String("Choke ON/OFF"))
 	{
 		isChokeGroupActive = static_cast<bool> (newValue);
+		
+		//For Debugging Purposes
+		/*String value;
+		value = (isChokeGroupActive == true) ? "true" : "false";
+ 		Logger::outputDebugString(value);*/
 	}
 }

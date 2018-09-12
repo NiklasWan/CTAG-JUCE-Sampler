@@ -128,6 +128,12 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
 
     //[Constructor] You can add your own custom stuff here..
+	chokeGroupActive = new ToggleButton("ChokeGroupActiveState");
+	chokeGroupActive->setButtonText(translate("Activate Hat Choke Group"));
+	chokeGroupActive->setBounds(215, 24, 150, 24);
+	addAndMakeVisible(chokeGroupActive);
+
+	chokeGroupActiveAttachment = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("Choke ON/OFF"), *chokeGroupActive);
 	kitComboBox->setSelectedId(1);
 	rootNoteComboBox->setSelectedId(1);
 	scaleComboBox->setSelectedId(1);

@@ -59,6 +59,8 @@ private:
 	JucesamplerAudioProcessor& processor;
 	void loadSampleData();
 	int indexRootNote, indexMode, indexKit;
+	ScopedPointer<ToggleButton> chokeGroupActive;
+	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> chokeGroupActiveAttachment;
     //[/UserVariables]
 
     //==============================================================================
