@@ -353,7 +353,7 @@
  #define JucePlugin_ManufacturerCode       0x4d616e75 // 'Manu'
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             0x51746b71 // 'Qtkq'
+ #define JucePlugin_PluginCode             0x51637539 // 'Qcu9'
 #endif
 #ifndef  JucePlugin_IsSynth
  #define JucePlugin_IsSynth                1
