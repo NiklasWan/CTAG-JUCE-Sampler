@@ -6,6 +6,7 @@ void CTAGSampler::setup()
 {
 	samplesFolder = File::getSpecialLocation(File::userDesktopDirectory).getChildFile("Samples");
 	instruments = {"Kick", "Snare", "Clap", "Tom", "Perc", "OpHat", "ClHat", "Crash", "Ride"};
+	isChokeGroupActive = false;
 	for (int i = 0; i < NUM_VOICES; i++)
 	{
 		auto* voice = new CTAGSamplerVoice(i);
@@ -80,6 +81,40 @@ void CTAGSampler::noteOn(int midiChannel,
 					if(voice->canPlayCTAGSound(midiNoteNumber) && !voice->getCurrentlyPlayingSound())
 					{
 						//Logger::outputDebugString("Start Voice: " + std::to_string(i) + " with Sound: " + std::to_string(j));
+						
+						if(isChokeGroupActive && (midiNoteNumber == 42 || midiNoteNumber == 46))
+						{
+								switch(midiNoteNumber)
+								{
+								case 42:
+									for(int i = 0; i < getNumVoices(); i++)
+									{
+										if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(getVoice(i)))
+										{
+											if(voice->canPlayCTAGSound(46))
+											{
+												stopVoice(voice, 0.0f, false);
+												break;
+											}
+										}
+									}
+								case 46:
+									for (int i = 0; i < getNumVoices(); i++)
+									{
+										if (auto* voice = dynamic_cast<CTAGSamplerVoice*>(getVoice(i)))
+										{
+											if (voice->canPlayCTAGSound(42))
+											{
+												stopVoice(voice, 0.0f, false);
+												break;
+											}
+										}
+									}
+								default:
+									break;
+								}
+						}
+						
 						startVoice(voice, sound, midiChannel, midiNoteNumber, velocity);
 					}
 				}
@@ -169,4 +204,12 @@ void CTAGSampler::addCTAGSound(String instrument, String fileName, String kit)
 	delete file;
 
 	
+}
+
+void CTAGSampler::parameterChanged(const String &parameterID, float newValue)
+{
+	if (parameterID == String("Choke ON/OFF"))
+	{
+		isChokeGroupActive = static_cast<bool> (newValue);
+	}
 }

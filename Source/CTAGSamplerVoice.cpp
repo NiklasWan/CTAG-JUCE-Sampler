@@ -22,7 +22,12 @@ void CTAGSamplerVoice::startNote(int midiNoteNumber, float velocity, Synthesiser
 			rgain = velocity;
 
 			env.startEG();
-		
+			if (isVelocityFilterActive)
+			{
+				filterCutoff = filterLeft.cutoffControl;
+				filterLeft.cutoffControl *= lgain;
+				filterRight.cutoffControl *= rgain;
+			}
 		
 		
 	}
@@ -53,7 +58,8 @@ void CTAGSamplerVoice::stopNote(float velocity, bool allowTailOff)
 		{
 			env.shutDown();
 			clearCurrentNote();
-			
+			if(isVelocityFilterActive)
+				setCutoffFreq(filterCutoff);
 		}
 
 		else if (!allowTailOff && velocity == 1.0f)
@@ -61,6 +67,8 @@ void CTAGSamplerVoice::stopNote(float velocity, bool allowTailOff)
 			
 			if (env.canNoteOff())
 				env.noteOff();
+			if (isVelocityFilterActive)
+				setCutoffFreq(filterCutoff);
 		}
 			
 	
@@ -96,6 +104,12 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			l *= envVal;
 			r *= envVal;
 
+			//Velocity Volume Modulation
+			if(isVelocityVolumeActive)
+			{
+				l *= lgain;
+				r *= rgain;
+			}
 			
 
 			//WaveShaper
@@ -104,10 +118,13 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			r = shaper.processSample(r);
 
 			//Filter
+			//Filter Velocity Modulation
+			
 			filterLeft.update();
 			filterRight.update();
 			l = filterLeft.doFilter(l);
 			r = filterRight.doFilter(r);
+			//Logger::outputDebugString("velocity left: " + std::to_string(lgain) + " filterCutoff: " + std::to_string(filterLeft.getCutofff()));
 
 
 			if (outR != nullptr)
@@ -125,6 +142,8 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 				
 			if (env.getState() == 0 || sourceSamplePosition > playingSound->length)
 			{
+				if (isVelocityFilterActive)
+					setCutoffFreq(filterCutoff);
 				clearCurrentNote();
 				break;
 			}
@@ -183,5 +202,13 @@ void CTAGSamplerVoice::parameterChanged(const String &parameterID, float newValu
 	if (parameterID == String("pitchVal" + String(index)))
 	{
 		pitchVal = newValue;
+	}
+	if (parameterID == String("vf" + String(index)))
+	{
+		isVelocityFilterActive = static_cast<bool>(newValue);
+	}
+	if (parameterID == String("vu" + String(index)))
+	{
+		isVelocityVolumeActive = static_cast<bool>(newValue);
 	}
 }

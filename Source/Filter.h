@@ -101,7 +101,7 @@ public:
 
 	void setActive(bool activeState) { this->activeState = activeState; }
 
-
+	double getCutofff() { return cutoffValue; }
 
 	/**
 

@@ -26,11 +26,12 @@ private:
 	int index;
 	LinearSmoothedValue<double> shaperAmp;
 	double currSampRate;
-
+	bool isVelocityFilterActive, isVelocityVolumeActive;
 	//Variables from SamplerVoice Base Class
 	double pitchRatio = 0;
 	double sourceSamplePosition = 0;
 	float lgain = 0, rgain = 0;
+	double filterCutoff;
 public:
 	
 	//Constructor
@@ -38,6 +39,8 @@ public:
 	{ 
 		shaperAmp.reset(48000, 0.01);
 		shaperAmp.setValue(0.2);
+		isVelocityFilterActive = false;
+		isVelocityVolumeActive = false;
 	}
 
 	//Override Methods

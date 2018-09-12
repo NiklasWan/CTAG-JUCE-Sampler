@@ -46,12 +46,15 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
 		valueTree->createAndAddParameter(String("ampEnvRelease" + String(i)), "ampEnvRelease", "", NormalisableRange<float>(0.0f, 5000.0f), 1000.0f, doubleToString, stringToDouble);
 
 		valueTree->createAndAddParameter(String("Filter ON/OFF" + String(i)), "Filter ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
-		valueTree->createAndAddParameter(String("filterCutoff" + String(i)), "filterCutoff", "", NormalisableRange<float>(18.0f, 18000.0f, 0, 0.199f), 18000.0f, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(String("filterCutoff" + String(i)), "filterCutoff", "", NormalisableRange<float>(40, 18000.0f, 0, 0.199f), 18000.0f, doubleToString, stringToDouble);
 
 		valueTree->createAndAddParameter(String("Distortion ON/OFF" + String(i)), "Distortion ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
 		valueTree->createAndAddParameter(String("distortionVal" + String(i)), "distortionVal", "", NormalisableRange<float>(0.2f, 5.0f), 0.2f, doubleToString, stringToDouble);
 
 		valueTree->createAndAddParameter(String("pitchVal" + String(i)), "pitchVal", "", NormalisableRange<float>(-12, 12, 1), 0, intToString, stringToInt);
+
+		valueTree->createAndAddParameter(String("vf" + String(i)), "vf", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
+		valueTree->createAndAddParameter(String("vu" + String(i)), "vu", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
 		if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
 		{
 			valueTree->addParameterListener(String("ampEnvAttack" + String(i)) , voice);
@@ -66,8 +69,16 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
 			valueTree->addParameterListener(String("distortionVal" + String(i)), voice);
 
 			valueTree->addParameterListener(String("pitchVal" + String(i)), voice);
+
+			valueTree->addParameterListener(String("vf" + String(i)), voice);
+			valueTree->addParameterListener(String("vu" + String(i)), voice);
 		}
+		
 	}
+
+	valueTree->createAndAddParameter(String("Choke ON/OFF"), "Choke ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
+	valueTree->addParameterListener(String("Choke ON/OFF"), &sampler);
+
 	valueTree->state = ValueTree("CTAGSamplerParameters");
 	
 	

@@ -89,6 +89,17 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	filterToggle->addListener(this);
 	addAndMakeVisible(filterToggle);
 
+	filterVelocityToggle = new ToggleButton("filterVelocityToggler");
+	filterVelocityToggle->setButtonText(translate("Velocity -> Cutoff"));
+	filterVelocityToggle->setBounds(272, 80, 150, 24);
+	addAndMakeVisible(filterVelocityToggle);
+	filterVelocityToggle->setVisible(false);
+
+	volumeVelocityToggle = new ToggleButton("volumeVelocityToggle");
+	volumeVelocityToggle->setButtonText(translate("Velocity -> Volume"));
+	volumeVelocityToggle->setBounds(422, 80, 150, 24);
+	addAndMakeVisible(volumeVelocityToggle);
+
 	distortionToggle = new ToggleButton("distortionToggle");
 	distortionToggle->setButtonText(translate("Distortion"));
 	distortionToggle->setBounds(368, 128, 150, 24);
@@ -155,7 +166,8 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	filterCutoffAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("filterCutoff" + String(counter)), *filterSlider);
 	distortionValueAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("distortionVal" + String(counter)), *distortionSlider);
 	pitchValueAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("pitchVal" + String(counter)), *pitchDummy);
-
+	filterVelocityToggleAttach = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("vf" + String(counter)), *filterVelocityToggle);
+	volumeVelocityToggleAttach = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("vu" + String(counter)), *volumeVelocityToggle);
 	counter++;
 }
 
@@ -206,9 +218,17 @@ void CTAGInstrumentComponent::buttonClicked(Button* buttonThatWasClicked)
 	if(buttonThatWasClicked == filterToggle)
 	{
 		if (filterToggle->getToggleState())
+		{
 			filterSlider->setVisible(true);
+			filterVelocityToggle->setVisible(true);
+		}
+			
 		if (!filterToggle->getToggleState())
+		{
 			filterSlider->setVisible(false);
+			filterVelocityToggle->setVisible(false);
+		}
+			
 	}
 	else if (buttonThatWasClicked == distortionToggle)
 	{

@@ -13,18 +13,20 @@
 #include "CTAGSamplerSound.h"
 #include "CTAGSamplerVoice.h"
 
-class CTAGSampler : public Synthesiser
+class CTAGSampler : public Synthesiser, public AudioProcessorValueTreeState::Listener
 {
 
 	AudioFormatManager formatManager;
 	File samplesFolder;
 	StringArray instruments;
+	bool isChokeGroupActive;
 	/**
 		This function is a private helper function to loadSamples() and loads a specific file into memory and adds it to the sounds array of CTAGSampler. 
 	*/
 	void addCTAGSound(String instrument, String filename, String kit);
 public:
 	//Override Methods
+	void parameterChanged(const String &parameterID, float newValue) override;
 	void noteOn(int midiChannel,
 		int midiNoteNumber,
 		float velocity) override;

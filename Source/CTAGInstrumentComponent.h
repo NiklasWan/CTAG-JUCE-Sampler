@@ -32,6 +32,8 @@ private:
 	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> filterCutoffAttach;
 	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> distortionValueAttach;
 	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> pitchValueAttach;
+	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> filterVelocityToggleAttach;
+	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> volumeVelocityToggleAttach;
 
 	ScopedPointer<Slider> attackSlider;
 	ScopedPointer<Slider> decaySlider;
@@ -50,6 +52,8 @@ private:
 	ScopedPointer<Slider> pitchSlider;
 	ScopedPointer<Slider> pitchDummy;
 	ScopedPointer<Label> pitchValLabel;
+	ScopedPointer<ToggleButton> filterVelocityToggle;
+	ScopedPointer<ToggleButton> volumeVelocityToggle;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CTAGInstrumentComponent)
 };
