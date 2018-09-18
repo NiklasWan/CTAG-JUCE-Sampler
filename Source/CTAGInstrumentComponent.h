@@ -3,6 +3,8 @@
 #include "PluginProcessor.h"
 #include "PitchRateConversion.h"
 
+class DecibelSlider;
+
 class CTAGInstrumentComponent : public Component, public Button::Listener, public Slider::Listener
 {
 public:
@@ -34,6 +36,7 @@ private:
 	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> pitchValueAttach;
 	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> filterVelocityToggleAttach;
 	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> volumeVelocityToggleAttach;
+	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> volumeAttachment;
 
 	ScopedPointer<Slider> attackSlider;
 	ScopedPointer<Slider> decaySlider;
@@ -54,6 +57,34 @@ private:
 	ScopedPointer<Label> pitchValLabel;
 	ScopedPointer<ToggleButton> filterVelocityToggle;
 	ScopedPointer<ToggleButton> volumeVelocityToggle;
+	ScopedPointer<DecibelSlider> volumeSlider;
+	ScopedPointer<Label> volumeLabel;
+	ScopedPointer<Slider> levelDummy;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CTAGInstrumentComponent)
+};
+
+
+class DecibelSlider : public Slider
+{
+public:
+	DecibelSlider() {}
+
+	double getValueFromText(const String& text) override
+	{
+		auto minusInfinitydB = -96.0;
+
+		auto decibelText = text.upToFirstOccurrenceOf("dB", false, false).trim();   
+
+		return decibelText.equalsIgnoreCase("-INF") ? minusInfinitydB
+			: decibelText.getDoubleValue();  
+	}
+
+	String getTextFromValue(double value) override
+	{
+		return Decibels::toString(value);
+	}
+
+private:
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DecibelSlider)
 };

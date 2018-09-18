@@ -104,6 +104,11 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			l *= envVal;
 			r *= envVal;
 
+			//Apply Gain from Slider
+			levelSlider = levelAmp.getNextValue();
+			l *= levelSlider;
+			r *= levelSlider;
+
 			//Velocity Volume Modulation
 			if(isVelocityVolumeActive)
 			{
@@ -210,5 +215,9 @@ void CTAGSamplerVoice::parameterChanged(const String &parameterID, float newValu
 	if (parameterID == String("vu" + String(index)))
 	{
 		isVelocityVolumeActive = static_cast<bool>(newValue);
+	}
+	if (parameterID == String("amp" + String(index)))
+	{
+		levelAmp.setValue(newValue);
 	}
 }

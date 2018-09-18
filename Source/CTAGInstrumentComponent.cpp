@@ -6,6 +6,24 @@ int CTAGInstrumentComponent::counter = 0;
 
 CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) : processor(p)
 {
+	volumeSlider = new DecibelSlider();
+	volumeSlider->setRange(-96.0f, 0, 0.0f);
+	volumeSlider->setSliderStyle(Slider::LinearHorizontal);
+	volumeSlider->setTextBoxStyle(Slider::TextBoxRight, false, 60, 20);
+	volumeSlider->setValue(Decibels::gainToDecibels(1));
+	volumeSlider->setBounds(40, 40, 236, 40);
+	volumeSlider->addListener(this);
+	addAndMakeVisible(volumeSlider);
+
+	volumeLabel = new Label("volumeLabel", translate("Volume"));
+	volumeLabel->setFont(Font(12.00f, Font::plain).withTypefaceStyle("Regular"));
+	volumeLabel->setJustificationType(Justification::centredLeft);
+	volumeLabel->setEditable(false, false, false);
+	volumeLabel->setColour(TextEditor::textColourId, Colours::black);
+	volumeLabel->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
+	volumeLabel->setBounds(40, 20, 150, 24);
+	addAndMakeVisible(volumeLabel);
+
 	attackSlider = new Slider("attackSlider");
 	attackSlider->setSliderStyle(Slider::LinearVertical);
 	attackSlider->setTextBoxStyle(Slider::NoTextBox, false, 40, 20);
@@ -44,7 +62,7 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	amplitudeEnvelopeLabel->setEditable(false, false, false);
 	amplitudeEnvelopeLabel->setColour(TextEditor::textColourId, Colours::black);
 	amplitudeEnvelopeLabel->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
-	amplitudeEnvelopeLabel->setBounds(48, 88, 150, 24);
+	amplitudeEnvelopeLabel->setBounds(40, 88, 150, 24);
 	addAndMakeVisible(amplitudeEnvelopeLabel);
 
 	attackLabel = new Label("attackLabel", translate("Attack"));
@@ -147,6 +165,10 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	pitchDummy->setRange(-12, 12, 1);
 	pitchDummy->setValue(0);
 
+	levelDummy = new Slider("levelDummy");
+	levelDummy->setRange(0.0f, 1.0f);
+	levelDummy->setValue(1.0f);
+
 	pitchValLabel = new Label("pitchValLabel", translate("C"));
 	pitchValLabel->setBounds(488, 248, 80, 20);
 	pitchValLabel->setJustificationType(Justification::centred);
@@ -168,6 +190,8 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	pitchValueAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("pitchVal" + String(counter)), *pitchDummy);
 	filterVelocityToggleAttach = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("vf" + String(counter)), *filterVelocityToggle);
 	volumeVelocityToggleAttach = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("vu" + String(counter)), *volumeVelocityToggle);
+	volumeAttachment = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("amp" + String(counter)), *levelDummy);
+
 	counter++;
 }
 
@@ -183,6 +207,7 @@ CTAGInstrumentComponent::~CTAGInstrumentComponent()
 	filterCutoffAttach = nullptr;
 	distortionValueAttach = nullptr;
 	pitchValueAttach = nullptr;
+	volumeAttachment = nullptr;
 
 	pitchSlider = nullptr;
 	distortionSlider = nullptr;
@@ -200,6 +225,9 @@ CTAGInstrumentComponent::~CTAGInstrumentComponent()
 	attackSlider = nullptr;
 	pitchDummy = nullptr;
 	pitchValLabel = nullptr;
+	levelDummy = nullptr;
+	volumeSlider = nullptr;
+	volumeLabel = nullptr;
 	counter--;
 }
 
@@ -248,6 +276,11 @@ void CTAGInstrumentComponent::sliderValueChanged(Slider* slider)
 		pitchDummy->setValue(factor);
 		String textBoxSymbol = pitchCalc.getTextBoxSymbol(sliderVal);
 		pitchValLabel->setText(textBoxSymbol, NotificationType::sendNotification);
+	}
+	if(slider == volumeSlider)
+	{
+		double level = Decibels::decibelsToGain(slider->getValue());
+		levelDummy->setValue(level);
 	}
 }
 

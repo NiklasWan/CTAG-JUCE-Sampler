@@ -24,7 +24,7 @@ private:
 	VAOnePoleFilter filterLeft, filterRight;
 	WaveShaper shaper;
 	int index;
-	LinearSmoothedValue<double> shaperAmp;
+	LinearSmoothedValue<double> shaperAmp, levelAmp;
 	double currSampRate;
 	bool isVelocityFilterActive, isVelocityVolumeActive;
 	//Variables from SamplerVoice Base Class
@@ -32,13 +32,16 @@ private:
 	double sourceSamplePosition = 0;
 	float lgain = 0, rgain = 0;
 	double filterCutoff;
+	double levelSlider;
 public:
 	
 	//Constructor
-	CTAGSamplerVoice(int i) : index(i), pitchVal(0), currSampRate(48000)
+	CTAGSamplerVoice(int i) : index(i), pitchVal(0), currSampRate(48000), levelSlider(1)
 	{ 
 		shaperAmp.reset(48000, 0.01);
 		shaperAmp.setValue(0.2);
+		levelAmp.reset(48000, 0.01);
+		levelAmp.setValue(1.0);
 		isVelocityFilterActive = false;
 		isVelocityVolumeActive = false;
 	}
@@ -60,6 +63,7 @@ public:
 		{
 			currSampRate = newRate;
 			shaperAmp.reset(currSampRate, 0.01);
+			levelAmp.reset(currSampRate, 0.01);
 			env.setSampleRate(currSampRate);
 			filterLeft.setSampleRate(currSampRate);
 			filterRight.setSampleRate(currSampRate);
