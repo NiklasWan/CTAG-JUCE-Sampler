@@ -8,7 +8,7 @@ When one mode is chosen, you can only pitch the sample within your given key.
 
 ### Features
 * Total of 9 Voices
-* Each Voice has: ADSR-Volume-Envelope, Gain-Control, Pitching, One-Pole-Filter, WaveShaper, Velocity Modulation for amplitude and filter cutoff
+* Each Voice has: ADSR-Volume-Envelope, Gain-Control, Pan-Control, Pitching, One-Pole-Filter, WaveShaper, Velocity Modulation for amplitude and filter cutoff
 * Choose between 5 different Drum-Kits with (Kick, Snare, Clap, ClHat, OpHat, Tom, Perc, Ride, Crash)
 * Drum Instruments arranged after General-Midi-Standard 
 * Choose between 5 different Modes and all Root Notes to choose your Scale
