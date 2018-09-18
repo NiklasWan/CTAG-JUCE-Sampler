@@ -109,6 +109,11 @@ void CTAGSamplerVoice::renderNextBlock(AudioBuffer< float > &outputBuffer, int s
 			l *= levelSlider;
 			r *= levelSlider;
 
+			//Apply Pan 
+			pan.setPosition(panAmp.getNextValue());
+			l = pan.processLeftChannel(l);
+			r = pan.processRightChannel(r);
+
 			//Velocity Volume Modulation
 			if(isVelocityVolumeActive)
 			{
@@ -219,5 +224,9 @@ void CTAGSamplerVoice::parameterChanged(const String &parameterID, float newValu
 	if (parameterID == String("amp" + String(index)))
 	{
 		levelAmp.setValue(newValue);
+	}
+	if (parameterID == String("pan" + String(index)))
+	{
+		panAmp.setValue(newValue);
 	}
 }

@@ -56,6 +56,7 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
 		valueTree->createAndAddParameter(String("vf" + String(i)), "vf", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
 		valueTree->createAndAddParameter(String("vu" + String(i)), "vu", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
 		valueTree->createAndAddParameter(String("amp" + String(i)), "amplitude", "", NormalisableRange<float>(0.0f, 1.0f), 1, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(String("pan" + String(i)), "Pan", "", NormalisableRange<float>(-1.0f, 1.0f), 0, doubleToString, stringToDouble);
 
 		if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
 		{
@@ -75,6 +76,7 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
 			valueTree->addParameterListener(String("vf" + String(i)), voice);
 			valueTree->addParameterListener(String("vu" + String(i)), voice);
 			valueTree->addParameterListener(String("amp" + String(i)), voice);
+			valueTree->addParameterListener(String("pan" + String(i)), voice);
 		}
 		
 	}

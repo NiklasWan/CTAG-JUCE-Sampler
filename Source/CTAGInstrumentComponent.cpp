@@ -24,6 +24,44 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	volumeLabel->setBounds(40, 20, 150, 24);
 	addAndMakeVisible(volumeLabel);
 
+	panKnob = new Slider("panKnob");
+	panKnob->setSliderStyle(Slider::Rotary);
+	panKnob->setTextBoxStyle(Slider::NoTextBox, false, 40, 20);
+	panKnob->setRange(-1.0f, 1.0f, 0);
+	panKnob->setValue(0.0f);
+	panKnob->setColour(Slider::ColourIds::rotarySliderFillColourId, Colour::fromRGBA(0x26, 0x32, 0x38, 0xFF));
+	panKnob->setBounds(316, 30, 64, 88);
+	addAndMakeVisible(panKnob);
+
+	panLabel = new Label("panLabel", translate("Pan"));
+	panLabel->setFont(Font(12.00f, Font::plain).withTypefaceStyle("Regular"));
+	panLabel->setJustificationType(Justification::centred);
+	panLabel->setEditable(false, false, false);
+	panLabel->setColour(TextEditor::textColourId, Colours::black);
+	panLabel->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
+	panLabel->setBounds(316, 20, 64, 24);
+	addAndMakeVisible(panLabel);
+
+	panLeftLabel = new Label("panLeftLabel", translate("L"));
+	panLeftLabel->setFont(Font(10.00f, Font::plain).withTypefaceStyle("Regular"));
+	panLeftLabel->setJustificationType(Justification::centredLeft);
+	panLeftLabel->setEditable(false, false, false);
+	panLeftLabel->setColour(TextEditor::textColourId, Colours::black);
+	panLeftLabel->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
+	panLeftLabel->setBounds(316, 90, 64, 24);
+	addAndMakeVisible(panLeftLabel);
+
+	panRightLabel = new Label("panRightLabel", translate("R"));
+	panRightLabel->setFont(Font(10.00f, Font::plain).withTypefaceStyle("Regular"));
+	panRightLabel->setJustificationType(Justification::centredLeft);
+	panRightLabel->setEditable(false, false, false);
+	panRightLabel->setColour(TextEditor::textColourId, Colours::black);
+	panRightLabel->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
+	panRightLabel->setBounds(364, 90, 64, 24);
+	addAndMakeVisible(panRightLabel);
+
+
+
 	attackSlider = new Slider("attackSlider");
 	attackSlider->setSliderStyle(Slider::LinearVertical);
 	attackSlider->setTextBoxStyle(Slider::NoTextBox, false, 40, 20);
@@ -191,6 +229,7 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	filterVelocityToggleAttach = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("vf" + String(counter)), *filterVelocityToggle);
 	volumeVelocityToggleAttach = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("vu" + String(counter)), *volumeVelocityToggle);
 	volumeAttachment = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("amp" + String(counter)), *levelDummy);
+	panAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.getValueTree(), String("pan" + String(counter)), *panKnob);
 
 	counter++;
 }
@@ -208,6 +247,7 @@ CTAGInstrumentComponent::~CTAGInstrumentComponent()
 	distortionValueAttach = nullptr;
 	pitchValueAttach = nullptr;
 	volumeAttachment = nullptr;
+	panAttach = nullptr;
 
 	pitchSlider = nullptr;
 	distortionSlider = nullptr;
@@ -228,6 +268,11 @@ CTAGInstrumentComponent::~CTAGInstrumentComponent()
 	levelDummy = nullptr;
 	volumeSlider = nullptr;
 	volumeLabel = nullptr;
+	panKnob = nullptr;
+	panLabel = nullptr;
+	panLeftLabel = nullptr;
+	panRightLabel = nullptr;
+
 	counter--;
 }
 

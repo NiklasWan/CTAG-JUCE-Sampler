@@ -26,6 +26,8 @@
         <FILE id="J3Zmgx" name="OnePoleFilter.cpp" compile="1" resource="0"
               file="Source/OnePoleFilter.cpp"/>
         <FILE id="kYwbvg" name="OnePoleFilter.h" compile="0" resource="0" file="Source/OnePoleFilter.h"/>
+        <FILE id="fclWA0" name="PanPos.cpp" compile="1" resource="0" file="Source/PanPos.cpp"/>
+        <FILE id="UTfnoW" name="PanPos.h" compile="0" resource="0" file="Source/PanPos.h"/>
         <FILE id="yf4fDU" name="WaveShaper.cpp" compile="1" resource="0" file="Source/WaveShaper.cpp"/>
         <FILE id="ku7fHe" name="WaveShaper.h" compile="0" resource="0" file="Source/WaveShaper.h"/>
       </GROUP>
