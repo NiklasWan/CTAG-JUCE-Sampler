@@ -25,11 +25,12 @@ CTAGTabComponent::CTAGTabComponent(JucesamplerAudioProcessor& p) : processor(p)
 	tabbedComponent->setTabBarDepth(25);
 	tabbedComponent->setCurrentTabIndex(0);
 
+	setSize(600, 400);
 	tabbedComponent->setBounds(0, 0, 600, 400);
 
 	addAndMakeVisible(tabbedComponent);
 
-	setSize(600, 400);
+	
 }
 
 CTAGTabComponent::~CTAGTabComponent()

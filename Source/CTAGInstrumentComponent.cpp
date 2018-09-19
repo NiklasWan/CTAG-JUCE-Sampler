@@ -16,7 +16,7 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	addAndMakeVisible(volumeSlider);
 
 	volumeLabel = new Label("volumeLabel", translate("Volume"));
-	volumeLabel->setFont(Font(12.00f, Font::plain).withTypefaceStyle("Regular"));
+	volumeLabel->setFont(Font(15.00f, Font::plain).withTypefaceStyle("Regular"));
 	volumeLabel->setJustificationType(Justification::centredLeft);
 	volumeLabel->setEditable(false, false, false);
 	volumeLabel->setColour(TextEditor::textColourId, Colours::black);
@@ -34,7 +34,7 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	addAndMakeVisible(panKnob);
 
 	panLabel = new Label("panLabel", translate("Pan"));
-	panLabel->setFont(Font(12.00f, Font::plain).withTypefaceStyle("Regular"));
+	panLabel->setFont(Font(15.00f, Font::plain).withTypefaceStyle("Regular"));
 	panLabel->setJustificationType(Justification::centred);
 	panLabel->setEditable(false, false, false);
 	panLabel->setColour(TextEditor::textColourId, Colours::black);
@@ -95,7 +95,7 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 	addAndMakeVisible(releaseSlider);
 
 	amplitudeEnvelopeLabel = new Label("amplitudeEnvelopeLabel", translate("Amplitude Envelope"));
-	amplitudeEnvelopeLabel->setFont(Font(12.00f, Font::plain).withTypefaceStyle("Regular"));
+	amplitudeEnvelopeLabel->setFont(Font(15.00f, Font::plain).withTypefaceStyle("Regular"));
 	amplitudeEnvelopeLabel->setJustificationType(Justification::centredLeft);
 	amplitudeEnvelopeLabel->setEditable(false, false, false);
 	amplitudeEnvelopeLabel->setColour(TextEditor::textColourId, Colours::black);
@@ -147,13 +147,13 @@ CTAGInstrumentComponent::CTAGInstrumentComponent(JucesamplerAudioProcessor& p) :
 
 	filterVelocityToggle = new ToggleButton("filterVelocityToggler");
 	filterVelocityToggle->setButtonText(translate("Velocity -> Cutoff"));
-	filterVelocityToggle->setBounds(272, 80, 150, 24);
+	filterVelocityToggle->setBounds(272, 300, 150, 24);
 	addAndMakeVisible(filterVelocityToggle);
 	filterVelocityToggle->setVisible(false);
 
 	volumeVelocityToggle = new ToggleButton("volumeVelocityToggle");
-	volumeVelocityToggle->setButtonText(translate("Velocity -> Volume"));
-	volumeVelocityToggle->setBounds(422, 80, 150, 24);
+	volumeVelocityToggle->setButtonText(translate("Velocity -> Amplitude"));
+	volumeVelocityToggle->setBounds(422, 300, 150, 24);
 	addAndMakeVisible(volumeVelocityToggle);
 
 	distortionToggle = new ToggleButton("distortionToggle");
