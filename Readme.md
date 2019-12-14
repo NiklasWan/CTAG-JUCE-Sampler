@@ -1,6 +1,6 @@
 # CTAG Drum-Sampler
 
-The CTAG-JUCE-Drum-Sampler is a project which implements an Audio-Drum-Sampler-VST-Plug-in for Windows built within the [JUCE Framework] (https://juce.com/).
+The CTAG-JUCE-Drum-Sampler is a project which implements an Audio-Drum-Sampler-VST-Plug-in for Windows built within the [JUCE Framework](https://juce.com/).
 It was built as a term project for the Creative Technologies AG (CTAG) of the University of Applied Sciences Kiel.
 
 
