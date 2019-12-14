@@ -60,7 +60,7 @@ void CTAGSampler::noteOn(int midiChannel,
 	
 	for(int j = 0; j < getNumSounds(); j++)
 	{
-		auto* sound = getSound(j);
+		auto* sound = getSound(j).get();
 		if(sound->appliesToNote(midiNoteNumber) && sound->appliesToChannel(midiChannel))
 		{
 			for(int i = 0; i < getNumVoices(); i++)
