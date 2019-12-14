@@ -14,8 +14,8 @@
 class CTAGSamplerSound : public SamplerSound
 {
 private:
-	int midiRootNote = 0;
-	int length = 0;
+	int midiRootNote;
+	long long length;
 	double sourceSampleRate;
 public:
 	friend class CTAGSamplerVoice;

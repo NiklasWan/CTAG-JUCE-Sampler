@@ -206,7 +206,7 @@ void CTAGSamplerVoice::parameterChanged(const String &parameterID, float newValu
 	}
 	if (parameterID == String("distortionVal" + String(index)))
 	{
-		shaperAmp.setValue(newValue);
+		shaperAmp.setTargetValue(newValue);
 		
 	}
 	if (parameterID == String("pitchVal" + String(index)))
@@ -223,10 +223,10 @@ void CTAGSamplerVoice::parameterChanged(const String &parameterID, float newValu
 	}
 	if (parameterID == String("amp" + String(index)))
 	{
-		levelAmp.setValue(newValue);
+		levelAmp.setTargetValue(newValue);
 	}
 	if (parameterID == String("pan" + String(index)))
 	{
-		panAmp.setValue(newValue);
+		panAmp.setTargetValue(newValue);
 	}
 }

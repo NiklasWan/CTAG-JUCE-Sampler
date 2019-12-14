@@ -42,11 +42,11 @@ public:
 	{ 
 		pan.setPosition(0.0);
 		shaperAmp.reset(48000, 0.01);
-		shaperAmp.setValue(0.2);
+		shaperAmp.setTargetValue(0.2);
 		levelAmp.reset(48000, 0.01);
-		levelAmp.setValue(1.0);
+		levelAmp.setTargetValue(1.0);
 		panAmp.reset(48000, 0.01);
-		panAmp.setValue(0);
+		panAmp.setTargetValue(0);
 		isVelocityFilterActive = false;
 		isVelocityVolumeActive = false;
 	}
