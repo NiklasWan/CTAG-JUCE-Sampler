@@ -23,48 +23,50 @@ private:
 	
 	static int counter;
 	JucesamplerAudioProcessor& processor;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> attackAmpAttach;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> decayAmpAttach;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> sustainAmpAttach;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> releaseAmpAttach;
+    
+    std::unique_ptr<DecibelSlider> volumeSlider;
+    std::unique_ptr<Label> volumeLabel;
+    std::unique_ptr<Slider> panKnob;
+    std::unique_ptr<Label> panLabel;
+    std::unique_ptr<Label> panLeftLabel;
+    std::unique_ptr<Label> panRightLabel;
+    std::unique_ptr<Slider> attackSlider;
+    std::unique_ptr<Slider> decaySlider;
+    std::unique_ptr<Slider> sustainSlider;
+    std::unique_ptr<Slider> releaseSlider;
+    std::unique_ptr<Label> amplitudeEnvelopeLabel;
+    std::unique_ptr<Label> attackLabel;
+    std::unique_ptr<Label> decayLabel;
+    std::unique_ptr<Label> sustainLabel;
+    std::unique_ptr<Label> releaseLabel;
+    std::unique_ptr<ToggleButton> filterToggle;
+    std::unique_ptr<ToggleButton> filterVelocityToggle;
+    std::unique_ptr<ToggleButton> volumeVelocityToggle;
+    std::unique_ptr<ToggleButton> distortionToggle;
+    std::unique_ptr<Slider> filterSlider;
+    std::unique_ptr<Slider> distortionSlider;
+    std::unique_ptr<Label> pitchLabel;
+    std::unique_ptr<Slider> pitchSlider;
+    std::unique_ptr<Slider> pitchDummy;
+    std::unique_ptr<Slider> levelDummy;
+    std::unique_ptr<Label> pitchValLabel;
+    
+    
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> attackAmpAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> decayAmpAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> sustainAmpAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> releaseAmpAttach;
 
-	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> filterToggleAttach;
-	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> distortionToggleAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> filterToggleAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> distortionToggleAttach;
 
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> filterCutoffAttach;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> distortionValueAttach;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> pitchValueAttach;
-	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> filterVelocityToggleAttach;
-	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> volumeVelocityToggleAttach;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> volumeAttachment;
-	ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> panAttach;
-
-	ScopedPointer<Slider> attackSlider;
-	ScopedPointer<Slider> decaySlider;
-	ScopedPointer<Slider> sustainSlider;
-	ScopedPointer<Slider> releaseSlider;
-	ScopedPointer<Label> amplitudeEnvelopeLabel;
-	ScopedPointer<Label> attackLabel;
-	ScopedPointer<Label> decayLabel;
-	ScopedPointer<Label> sustainLabel;
-	ScopedPointer<Label> releaseLabel;
-	ScopedPointer<ToggleButton> filterToggle;
-	ScopedPointer<ToggleButton> distortionToggle;
-	ScopedPointer<Slider> filterSlider;
-	ScopedPointer<Slider> distortionSlider;
-	ScopedPointer<Label> pitchLabel;
-	ScopedPointer<Slider> pitchSlider;
-	ScopedPointer<Slider> pitchDummy;
-	ScopedPointer<Label> pitchValLabel;
-	ScopedPointer<ToggleButton> filterVelocityToggle;
-	ScopedPointer<ToggleButton> volumeVelocityToggle;
-	ScopedPointer<DecibelSlider> volumeSlider;
-	ScopedPointer<Label> volumeLabel;
-	ScopedPointer<Slider> levelDummy;
-	ScopedPointer<Slider> panKnob;
-	ScopedPointer<Label> panLabel;
-	ScopedPointer<Label> panLeftLabel;
-	ScopedPointer<Label> panRightLabel;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> filterCutoffAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> distortionValueAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> pitchValueAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> filterVelocityToggleAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> volumeVelocityToggleAttach;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> volumeAttachment;
+	std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> panAttach;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CTAGInstrumentComponent)
 };

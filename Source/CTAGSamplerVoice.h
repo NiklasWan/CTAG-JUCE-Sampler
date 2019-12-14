@@ -19,13 +19,13 @@
 class CTAGSamplerVoice : public SamplerVoice,  public AudioProcessorValueTreeState::Listener
 {
 private:
+    int index;
 	int pitchVal;
 	BigInteger midiNote;
 	EnvelopeGenerator env;
 	VAOnePoleFilter filterLeft, filterRight;
 	WaveShaper shaper;
 	PanPos pan;
-	int index;
 	LinearSmoothedValue<double> shaperAmp, levelAmp, panAmp;
 	double currSampRate;
 	bool isVelocityFilterActive, isVelocityVolumeActive;

@@ -18,7 +18,7 @@ public:
 	Array<CTAGInstrumentComponent*> getInstrumentViews() { return instruments; }
 private:
 	JucesamplerAudioProcessor& processor;
-	ScopedPointer<TabbedComponent> tabbedComponent;
+	std::unique_ptr<TabbedComponent> tabbedComponent;
 	Array<CTAGInstrumentComponent*> instruments;
 	
 

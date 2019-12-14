@@ -29,34 +29,33 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), undoManager(new UndoManager()), valueTree(new AudioProcessorValueTreeState(*this, undoManager.get()))
 #endif
 {
-	undoManager = new UndoManager();
-	valueTree = new AudioProcessorValueTreeState(*this, undoManager);
-	
 	//Initialising Sampler
 	sampler.setup();
+    using Parameter = AudioProcessorValueTreeState::Parameter;
 	//Adding all Parameters to the Value Tree
 	for(int i = 0; i < sampler.getNumVoices(); i++)
 	{
-		valueTree->createAndAddParameter(String("ampEnvAttack" + String(i)), "ampEnvAttack", "", NormalisableRange<float>(0.0f, 500.0f), 0.0f, doubleToString, stringToDouble);
-		valueTree->createAndAddParameter(String("ampEnvDecay" + String(i)), "ampEnvDecay", "", NormalisableRange<float>(0.0f, 1000.0f), 0.0f, doubleToString, stringToDouble);
-		valueTree->createAndAddParameter(String("ampEnvSustain" + String(i)), "ampEnvSustain", "", NormalisableRange<float>(0.0f, 1.0f), 1, doubleToString, stringToDouble);
-		valueTree->createAndAddParameter(String("ampEnvRelease" + String(i)), "ampEnvRelease", "", NormalisableRange<float>(0.0f, 5000.0f), 1000.0f, doubleToString, stringToDouble);
+        
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("ampEnvAttack" + String(i)), "ampEnvAttack", "", NormalisableRange<float>(0.0f, 500.0f), 0.0f, doubleToString, stringToDouble));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("ampEnvDecay" + String(i)), "ampEnvDecay", "", NormalisableRange<float>(0.0f, 1000.0f), 0.0f, doubleToString, stringToDouble));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("ampEnvSustain" + String(i)), "ampEnvSustain", "", NormalisableRange<float>(0.0f, 1.0f), 1, doubleToString, stringToDouble));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("ampEnvRelease" + String(i)), "ampEnvRelease", "", NormalisableRange<float>(0.0f, 5000.0f), 1000.0f, doubleToString, stringToDouble));
 
-		valueTree->createAndAddParameter(String("Filter ON/OFF" + String(i)), "Filter ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
-		valueTree->createAndAddParameter(String("filterCutoff" + String(i)), "filterCutoff", "", NormalisableRange<float>(40, 18000.0f, 0, 0.199f), 18000.0f, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("Filter ON/OFF" + String(i)), "Filter ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("filterCutoff" + String(i)), "filterCutoff", "", NormalisableRange<float>(40, 18000.0f, 0, 0.199f), 18000.0f, doubleToString, stringToDouble));
 
-		valueTree->createAndAddParameter(String("Distortion ON/OFF" + String(i)), "Distortion ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
-		valueTree->createAndAddParameter(String("distortionVal" + String(i)), "distortionVal", "", NormalisableRange<float>(0.2f, 5.0f), 0.2f, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("Distortion ON/OFF" + String(i)), "Distortion ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("distortionVal" + String(i)), "distortionVal", "", NormalisableRange<float>(0.2f, 5.0f), 0.2f, doubleToString, stringToDouble));
 
-		valueTree->createAndAddParameter(String("pitchVal" + String(i)), "pitchVal", "", NormalisableRange<float>(-12, 12, 1), 0, intToString, stringToInt);
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("pitchVal" + String(i)), "pitchVal", "", NormalisableRange<float>(-12, 12, 1), 0, intToString, stringToInt));
 
-		valueTree->createAndAddParameter(String("vf" + String(i)), "vf", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
-		valueTree->createAndAddParameter(String("vu" + String(i)), "vu", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
-		valueTree->createAndAddParameter(String("amp" + String(i)), "amplitude", "", NormalisableRange<float>(0.0f, 1.0f), 1, doubleToString, stringToDouble);
-		valueTree->createAndAddParameter(String("pan" + String(i)), "Pan", "", NormalisableRange<float>(-1.0f, 1.0f), 0, doubleToString, stringToDouble);
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("vf" + String(i)), "vf", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("vu" + String(i)), "vu", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("amp" + String(i)), "amplitude", "", NormalisableRange<float>(0.0f, 1.0f), 1, doubleToString, stringToDouble));
+		valueTree->createAndAddParameter(std::make_unique<Parameter> (String("pan" + String(i)), "Pan", "", NormalisableRange<float>(-1.0f, 1.0f), 0, doubleToString, stringToDouble));
 
 		if(auto* voice = dynamic_cast<CTAGSamplerVoice*>(sampler.getVoice(i)))
 		{
@@ -81,7 +80,7 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
 		
 	}
 
-	valueTree->createAndAddParameter(String("Choke ON/OFF"), "Choke ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool);
+	valueTree->createAndAddParameter(std::make_unique<Parameter> (String("Choke ON/OFF"), "Choke ON/OFF", "", NormalisableRange<float>(0, 1, 1), 0, boolToString, stringToBool));
 	valueTree->addParameterListener(String("Choke ON/OFF"), &sampler);
 
 	valueTree->state = ValueTree("CTAGSamplerParameters");
@@ -94,8 +93,6 @@ JucesamplerAudioProcessor::JucesamplerAudioProcessor()
 
 JucesamplerAudioProcessor::~JucesamplerAudioProcessor()
 {
-	undoManager = nullptr;
-	valueTree = nullptr;
 }
 
 //==============================================================================

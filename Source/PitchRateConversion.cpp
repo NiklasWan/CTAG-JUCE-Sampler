@@ -25,7 +25,7 @@ String PitchRateConversion::getTextBoxSymbol(int value)
 			index = (rootIndex + factor + 12) % 12;
 		}else
 		{
-			int index = (rootIndex + factor + 12);
+            index = (rootIndex + factor + 12);
 		}
 		
 		return symbols[index];

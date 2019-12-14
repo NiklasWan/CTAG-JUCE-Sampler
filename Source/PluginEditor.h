@@ -32,6 +32,6 @@ private:
     // access the processor object that created it.
 	friend class CTAGMainControls;
     JucesamplerAudioProcessor& processor;
-	ScopedPointer<CTAGTabComponent> tabComponent;
+	CTAGTabComponent tabComponent;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JucesamplerAudioProcessorEditor)
 };

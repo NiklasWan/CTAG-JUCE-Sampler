@@ -27,6 +27,7 @@ class Filter
 {
 public:
 	Filter(void);
+    virtual ~Filter() = 0;
 
 	/**
 

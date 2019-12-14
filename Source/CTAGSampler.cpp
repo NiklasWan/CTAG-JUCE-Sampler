@@ -188,13 +188,16 @@ void CTAGSampler::addCTAGSound(String instrument, String fileName, String kit)
 	else if (instrument == String("Ride"))
 	{
 		midiNote = 51;
-	}
+    } else
+    {
+        midiNote = -1;
+    }
 
 	File* file = new File(samplesFolder.getChildFile(instrument).getChildFile(kit).getChildFile(fileName));
 	
 	//Logger::outputDebugString(file->getFullPathName());
 	
-	ScopedPointer<AudioFormatReader> fileReader = formatManager.createReaderFor(*file);
+	std::unique_ptr<AudioFormatReader> fileReader(formatManager.createReaderFor(*file));
 	BigInteger note;
 	note.setBit(midiNote);
 

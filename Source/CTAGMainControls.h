@@ -58,19 +58,19 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	JucesamplerAudioProcessor& processor;
 	void loadSampleData();
-	int indexRootNote, indexMode, indexKit;
-	ScopedPointer<ToggleButton> chokeGroupActive;
-	ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment> chokeGroupActiveAttachment;
+	int indexRootNote, indexKit, indexMode;
+	std::unique_ptr<ToggleButton> chokeGroupActive;
+	std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> chokeGroupActiveAttachment;
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> kitLabel;
-    ScopedPointer<ComboBox> kitComboBox;
-    ScopedPointer<Label> rootNoteLabel;
-    ScopedPointer<ComboBox> rootNoteComboBox;
-    ScopedPointer<ComboBox> scaleComboBox;
-    ScopedPointer<Label> modeLabel;
-    ScopedPointer<TextButton> loadSamplesButton;
+    std::unique_ptr<Label> kitLabel;
+    std::unique_ptr<ComboBox> kitComboBox;
+    std::unique_ptr<Label> rootNoteLabel;
+    std::unique_ptr<ComboBox> rootNoteComboBox;
+    std::unique_ptr<ComboBox> scaleComboBox;
+    std::unique_ptr<Label> modeLabel;
+    std::unique_ptr<TextButton> loadSamplesButton;
 
 
     //==============================================================================

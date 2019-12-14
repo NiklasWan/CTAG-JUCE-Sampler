@@ -29,13 +29,15 @@
 
 //==============================================================================
 CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
-    : processor(p), indexRootNote(0), indexKit(0), indexMode(0)
+    : processor(p), indexRootNote(0), indexKit(0), indexMode(0), chokeGroupActive(new ToggleButton("ChokeGroupActiveState")), chokeGroupActiveAttachment(new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("Choke ON/OFF"), *chokeGroupActive)), kitLabel(new Label ("kitLabel",
+    TRANS("Choose Drum-Kit:"))), kitComboBox(new ComboBox ("kitComboBox")), rootNoteLabel(new Label ("rootNoteLabel",
+    TRANS("Choose Root Note:\n"))), rootNoteComboBox(new ComboBox ("rootNoteComboBox")), scaleComboBox(new ComboBox ("scaleComboBox")), modeLabel(new Label ("modeLabel",
+    TRANS("Choose Mode:"))), loadSamplesButton(new TextButton ("loadSamplesButton"))
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (kitLabel = new Label ("kitLabel",
-                                             TRANS("Choose Drum-Kit:")));
+    addAndMakeVisible (*kitLabel);
     kitLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
     kitLabel->setJustificationType (Justification::centredLeft);
     kitLabel->setEditable (false, false, false);
@@ -44,7 +46,7 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
     kitLabel->setBounds (168, 160, 150, 24);
 
-    addAndMakeVisible (kitComboBox = new ComboBox ("kitComboBox"));
+    addAndMakeVisible (*kitComboBox);
     kitComboBox->setEditableText (false);
     kitComboBox->setJustificationType (Justification::centredLeft);
     kitComboBox->setTextWhenNothingSelected (String());
@@ -58,8 +60,7 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
     kitComboBox->setBounds (176, 192, 104, 24);
 
-    addAndMakeVisible (rootNoteLabel = new Label ("rootNoteLabel",
-                                                  TRANS("Choose Root Note:\n")));
+    addAndMakeVisible (*rootNoteLabel);
     rootNoteLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
     rootNoteLabel->setJustificationType (Justification::centredLeft);
     rootNoteLabel->setEditable (false, false, false);
@@ -68,7 +69,7 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
     rootNoteLabel->setBounds (304, 160, 150, 24);
 
-    addAndMakeVisible (rootNoteComboBox = new ComboBox ("rootNoteComboBox"));
+    addAndMakeVisible (*rootNoteComboBox);
     rootNoteComboBox->setEditableText (false);
     rootNoteComboBox->setJustificationType (Justification::centredLeft);
     rootNoteComboBox->setTextWhenNothingSelected (String());
@@ -89,7 +90,7 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
     rootNoteComboBox->setBounds (312, 192, 104, 24);
 
-    addAndMakeVisible (scaleComboBox = new ComboBox ("scaleComboBox"));
+    addAndMakeVisible (*scaleComboBox);
     scaleComboBox->setEditableText (false);
     scaleComboBox->setJustificationType (Justification::centredLeft);
     scaleComboBox->setTextWhenNothingSelected (String());
@@ -104,8 +105,7 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
     scaleComboBox->setBounds (240, 128, 104, 24);
 
-    addAndMakeVisible (modeLabel = new Label ("modeLabel",
-                                              TRANS("Choose Mode:")));
+    addAndMakeVisible (*modeLabel);
     modeLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
     modeLabel->setJustificationType (Justification::centredLeft);
     modeLabel->setEditable (false, false, false);
@@ -114,7 +114,7 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
     modeLabel->setBounds (240, 104, 150, 24);
 
-    addAndMakeVisible (loadSamplesButton = new TextButton ("loadSamplesButton"));
+    addAndMakeVisible (*loadSamplesButton);
     loadSamplesButton->setButtonText (TRANS("Load Samples"));
     loadSamplesButton->addListener (this);
 
@@ -128,12 +128,10 @@ CTAGMainControls::CTAGMainControls (JucesamplerAudioProcessor &p)
 
 
     //[Constructor] You can add your own custom stuff here..
-	chokeGroupActive = new ToggleButton("ChokeGroupActiveState");
 	chokeGroupActive->setButtonText(translate("Activate Hat Choke Group"));
 	chokeGroupActive->setBounds(215, 24, 150, 24);
-	addAndMakeVisible(chokeGroupActive);
+	addAndMakeVisible(*chokeGroupActive);
 
-	chokeGroupActiveAttachment = new AudioProcessorValueTreeState::ButtonAttachment(processor.getValueTree(), String("Choke ON/OFF"), *chokeGroupActive);
 	kitComboBox->setSelectedId(1);
 	rootNoteComboBox->setSelectedId(1);
 	scaleComboBox->setSelectedId(1);
@@ -144,15 +142,6 @@ CTAGMainControls::~CTAGMainControls()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
-
-    kitLabel = nullptr;
-    kitComboBox = nullptr;
-    rootNoteLabel = nullptr;
-    rootNoteComboBox = nullptr;
-    scaleComboBox = nullptr;
-    modeLabel = nullptr;
-    loadSamplesButton = nullptr;
-
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
@@ -184,38 +173,40 @@ void CTAGMainControls::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     //[UsercomboBoxChanged_Pre]
     //[/UsercomboBoxChanged_Pre]
 
-    if (comboBoxThatHasChanged == kitComboBox)
+    if (comboBoxThatHasChanged == kitComboBox.get())
     {
         //[UserComboBoxCode_kitComboBox] -- add your combo box handling code here..
 		indexKit = kitComboBox->getSelectedItemIndex();
         //[/UserComboBoxCode_kitComboBox]
     }
-    else if (comboBoxThatHasChanged == rootNoteComboBox)
+    else if (comboBoxThatHasChanged == rootNoteComboBox.get())
     {
         //[UserComboBoxCode_rootNoteComboBox] -- add your combo box handling code here..
 		indexRootNote = rootNoteComboBox->getSelectedItemIndex();
 		
         //[/UserComboBoxCode_rootNoteComboBox]
     }
-    else if (comboBoxThatHasChanged == scaleComboBox)
+    else if (comboBoxThatHasChanged == scaleComboBox.get())
     {
         //[UserComboBoxCode_scaleComboBox] -- add your combo box handling code here..
 		indexMode = scaleComboBox->getSelectedItemIndex();
 		if (auto e = dynamic_cast<JucesamplerAudioProcessorEditor*>(processor.getActiveEditor()))
 		{
-			Array<CTAGInstrumentComponent*>  views = e->tabComponent->getInstrumentViews();
-			for (auto view : views)
-			{
-				if(scaleComboBox->getItemText(indexMode) == String("Chromatic"))
-				{
-					view->pitchSlider->setRange(-12, 12, 1);
-				}
-				else if(scaleComboBox->getItemText(indexMode) != String("Chromatic"))
-				{
-					view->pitchSlider->setRange(-7, 7, 1);
-				}
-				view->pitchCalc.setMode(indexMode);
-			}
+            auto  views = e->tabComponent.getInstrumentViews();
+            
+            for (int i = 0; i < views.size(); i++)
+            {
+                if(scaleComboBox->getItemText(indexMode) == String("Chromatic"))
+                {
+                    views[i]->pitchSlider->setRange(-12, 12, 1);
+                }
+                else if(scaleComboBox->getItemText(indexMode) != String("Chromatic"))
+                {
+                    views[i]->pitchSlider->setRange(-7, 7, 1);
+                }
+                views[i]->pitchCalc.setMode(indexMode);
+            }
+			
 				
 		}
         //[/UserComboBoxCode_scaleComboBox]
@@ -230,19 +221,21 @@ void CTAGMainControls::buttonClicked (Button* buttonThatWasClicked)
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == loadSamplesButton)
+    if (buttonThatWasClicked == loadSamplesButton.get())
     {
         //[UserButtonCode_loadSamplesButton] -- add your button handler code here..
 		loadSampleData();
 
 		if (auto e = dynamic_cast<JucesamplerAudioProcessorEditor*>(processor.getActiveEditor()))
 		{
-			Array<CTAGInstrumentComponent*> views = e->tabComponent->getInstrumentViews();
-			for (auto view : views)
-			{
-				view->pitchCalc.setRootNote(rootNoteComboBox->getItemText(indexRootNote));
-				view->pitchValLabel->setText(rootNoteComboBox->getItemText(indexRootNote), NotificationType::sendNotification);
-			}
+            auto views = e->tabComponent.getInstrumentViews();
+            
+            for (int i = 0; i < views.size(); i++)
+            {
+                views[i]->pitchCalc.setRootNote(rootNoteComboBox->getItemText(indexRootNote));
+                views[i]->pitchValLabel->setText(rootNoteComboBox->getItemText(indexRootNote), NotificationType::sendNotification);
+            }
+
 
 		}
         //[/UserButtonCode_loadSamplesButton]

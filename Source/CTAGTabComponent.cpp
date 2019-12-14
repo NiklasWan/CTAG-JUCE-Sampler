@@ -2,9 +2,8 @@
 
 
 
-CTAGTabComponent::CTAGTabComponent(JucesamplerAudioProcessor& p) : processor(p)
+CTAGTabComponent::CTAGTabComponent(JucesamplerAudioProcessor& p) : processor(p), tabbedComponent(new TabbedComponent(TabbedButtonBar::TabsAtTop))
 {
-	tabbedComponent = new TabbedComponent(TabbedButtonBar::TabsAtTop);
 
 	for(int i = 0; i < 9; i++)
 	{
@@ -28,14 +27,13 @@ CTAGTabComponent::CTAGTabComponent(JucesamplerAudioProcessor& p) : processor(p)
 	setSize(600, 400);
 	tabbedComponent->setBounds(0, 0, 600, 400);
 
-	addAndMakeVisible(tabbedComponent);
+	addAndMakeVisible(*tabbedComponent);
 
 	
 }
 
 CTAGTabComponent::~CTAGTabComponent()
 {
-	tabbedComponent = nullptr;
 	instruments.clear();
 }
 

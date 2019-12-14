@@ -61,8 +61,8 @@ public:
 private:
     //==============================================================================
 	CTAGSampler sampler;
-	ScopedPointer<AudioProcessorValueTreeState> valueTree;
-	ScopedPointer<UndoManager> undoManager;
-
+    std::unique_ptr<UndoManager> undoManager;
+	std::unique_ptr<AudioProcessorValueTreeState> valueTree;
+	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JucesamplerAudioProcessor)
 };

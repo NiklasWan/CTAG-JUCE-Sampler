@@ -24,3 +24,5 @@ void Filter::setQControl(double resonanceControl)
 {
 	
 }
+
+Filter::~Filter() {}

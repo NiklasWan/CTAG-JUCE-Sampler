@@ -14,9 +14,10 @@
 class CTAGSamplerSound : public SamplerSound
 {
 private:
+    double sourceSampleRate;
+    long long length;
 	int midiRootNote;
-	long long length;
-	double sourceSampleRate;
+	
 public:
 	friend class CTAGSamplerVoice;
 	CTAGSamplerSound(const String &name, AudioFormatReader &source, const BigInteger &midiNotes, int midiNoteForNormalPitch, double attackTimeSecs, double releaseTimeSecs, double maxSampleLengthSeconds) : SamplerSound(name, source, midiNotes, midiNoteForNormalPitch, attackTimeSecs, releaseTimeSecs, maxSampleLengthSeconds),

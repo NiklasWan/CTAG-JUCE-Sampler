@@ -13,19 +13,17 @@
 
 //==============================================================================
 JucesamplerAudioProcessorEditor::JucesamplerAudioProcessorEditor (JucesamplerAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor (&p), processor (p), tabComponent(p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
 	
     setSize (600, 400);
-	tabComponent = new CTAGTabComponent(processor);
 	addAndMakeVisible(tabComponent);
 }
 
 JucesamplerAudioProcessorEditor::~JucesamplerAudioProcessorEditor()
 {
-	tabComponent = nullptr;
 }
 
 //==============================================================================
